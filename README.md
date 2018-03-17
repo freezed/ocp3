@@ -39,23 +39,23 @@ guard without all the objects, he dies (according to the evolution theory).
 
 1. Create the starting frame
     * [x] Initialize a Git repo on Github
-    * [] Create the labyrinth without the graphical user interface
-    * [] When the logic of your labyrinth is made, use the PyGame for
+    * [ ] Create the labyrinth without the graphical user interface
+    * [ ] When the logic of your labyrinth is made, use the PyGame for
     the graphical interface
-    * [] Then focus on the three main elements of the game: the goalie, _McGyver_ and the objects.
-    * [] Represent them in your program
-    * [] Placed them at the beginning of the game
+    * [ ] Then focus on the three main elements of the game: the guard, _McGyver_ and the objects.
+    * [ ] Represent them in your program
+    * [ ] Placed them at the beginning of the game
 2. Animate the character
-    * [] The only moving element is _McGyver_, create classes methods for
+    * [ ] The only moving element is _McGyver_, create classes methods for
     animation and finding the exit
-    * [] make a simplified version of the game in which _McGyver_ wins
+    * [ ] make a simplified version of the game in which _McGyver_ wins
     when he arrives in front of the goalkeeper
 3. Recovering objects
-    * [] Add object management
-    * [] The way he pick them up
-    * [] Add a counter that will list them.
+    * [ ] Add object management
+    * [ ] The way he pick them up
+    * [ ] Add a counter that will list them.
 4. Win!
-    * [] _McGyver_ has picked up all the objects and asleep the guard
+    * [ ] _McGyver_ has picked up all the objects and asleep the guard
 
 ### Deliverables
 
