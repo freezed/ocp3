@@ -5,47 +5,41 @@
 Author: freezed <freezed@users.noreply.github.com> 2018-03-17
 Version: 0.1
 Licence: `GNU GPL v3` GNU GPL v3: http://www.gnu.org/licenses/
+
+Main file for [_ocp3_ project](https://github.com/freezed/ocp3)
+See [README](https://github.com/freezed/ocp3/blob/master/README.md) for
+details
 """
+from os import system
 import pygame
+from pygame.locals import K_ESCAPE, KEYDOWN, QUIT
 from map import Map
-from pygame.locals import KEYDOWN, K_ESCAPE, QUIT, K_DOWN, K_LEFT, K_UP, K_RIGHT
 
 pygame.init()
-screen = pygame.display.set_mode((100, 100))
-# Variables
+SCREEN = pygame.display.set_mode((100, 100))
+
 MAP_FILE = '01.map'
 
-# Class
+# Loading map
 MAP_GAME = Map(MAP_FILE)
-print(MAP_GAME.status)
+
 print(MAP_GAME.status_message)
 
-# Loading map
 MAP_GAME.map_print()
 
-# Event loop
-game_on = True
-while game_on:
+# Game loop
+GAME_ON = True
+while GAME_ON:
     for event in pygame.event.get():
         if event.type == QUIT:
-            game_on = False
+            GAME_ON = False
 
         if event.type == KEYDOWN:
             if event.key == K_ESCAPE:
-                game_on = False
+                GAME_ON = False
 
-        if event.type == KEYDOWN:
-            if event.key == K_DOWN:
-                print('down')
-
-        if event.type == KEYDOWN:
-            if event.key == K_LEFT:
-                print('left')
-
-        if event.type == KEYDOWN:
-            if event.key == K_UP:
-                print('up')
-
-        if event.type == KEYDOWN:
-            if event.key == K_RIGHT:
-                print('right')
+            else:
+                system('clear')
+                MAP_GAME.map_print()
+                print("move_status:{}".format(MAP_GAME.move_to(event.key)))
+                print("status_message:{}".format(MAP_GAME.status_message))

@@ -3,50 +3,50 @@ Author: freezed <freezed@users.noreply.github.com> 2018-02-06
 Version: 0.1
 Licence: `GNU GPL v3` GNU GPL v3: http://www.gnu.org/licenses/
 
-Ce fichier fait partie du projet `ocp3`
+This file is part of [_ocp3_ project](https://github.com/freezed/ocp3)
 """
 import os
 
 # CONFIGURATION
 
-# Elements dispo dans le labyrinthe
+# Error message
+ERR_MAP = "ERR_MAP: «{}»"
+
+MAZE_SIZE = 15
+
 MAZE_ELEMENTS = {'wall': '.',
                  'exit': 'U',
-                 'robo': 'X',
+                 'plyr': 'X',
                  'void': ' '}
-# Messages d'erreurs
-ERR_ = "#!@?# Oups… "
-ERR_MAP_FILE = ERR_ + "carte «{}» inaccessible!"
 
-MIN_MAP_SIDE = 3
+MSG_DISCLAMER = "MSG_DISCLAMER"
+MSG_START_GAME = "MSG_START_GAME"
+MSG_END_GAME = "MSG_END_GAME"
 
-MSG_DISCLAMER = "Bienvenue dans Roboc."
-MSG_START_GAME = "Votre partie commence"
-MSG_END_GAME = "Fin du jeu."
+
+# CLASS
 
 class Map:
     """
-    Fourni les moyens necessaire a l'utilisation d'un fichier carte.
-
-    Controle de coherance sur la carte choise, deplace le robo en
-    fonction des commandes du joueur jusqu'en fin de partie.
+    Provides a usable map from a text file
+    Checks the map compatibility
+    Moves the player to it
     """
 
     def __init__(self, map_file):
         """
-        Initialisation de la carte utilise
+        Initialise map
 
-        Instancie un objet Map avec les attributs suivant:
+        The Map object has given attributes:
 
-        :var int status: Etat de l'objet apres le deplacement
-        :var str status_message: Message relatif au deplacement
-        :var int _column_nb: Nbre de colonne du labyrinte (1ere ligne)
-        :var str _data_text: Contenu du labyrinte
-        :var str _element_under_robo: Element sous le robot
-        :var int _line_nb: Nbre de ligne du labyrinte
-        :var int _robo_position: position du robo dans _data_text
+        :var int status: move status (what append after a move command)
+        :var str status_message: feedback message for player
+        :var lst map_in_a_list: splited map in a list
+        :var str _map_in_a_string: map string
+        :var str _element_under_player: Element under player
+        :var int _player_position: Player index in _map_in_a_string
 
-        :param map_file: fichier «carte» avec chemin relatif
+        :param map_file: map filename
         :rtype map: str()
         :return: None
         """
@@ -54,33 +54,28 @@ class Map:
         if os.path.isfile(map_file) is True:
             with open(map_file, "r") as map_data:
 
-                # contenu de la carte en texte
-                self._data_text = map_data.read()
+                # translate to a splited lines string list
+                map_in_a_list = map_data.read().splitlines()
 
-                # contenu de la carte ligne a ligne
-                map_data_list = self._data_text.splitlines()
-
-            # nbre de colonne de la 1ere ligne de la carte
-            try:
-                self._column_nb = len(map_data_list[0]) + 1
-            except IndexError:
-                self._column_nb = 0
-
-            # nbre de ligne de la carte
-            try:
-                self._line_nb = len(map_data_list)
-            except IndexError:
-                self._line_nb = 0
-
-            # position du robot
-            self._robo_position = self._data_text.find(
-                MAZE_ELEMENTS['robo']
-            )
-
-            # element «sous» le robo, au depart
-            self._element_under_robo = MAZE_ELEMENTS['void']
+            # map line number
+            if len(map_in_a_list) != MAZE_SIZE:
+                self.status = False
+                self.status_message = ERR_MAP.format(':'.join(["maplines", len(map_in_a_list)]))
 
             # Add map checking here
+
+            # Constructing square map
+            self.map_in_a_list = [self.check_line(line) for line in map_in_a_list]
+            self._map_in_a_string = '\n'.join(map_in_a_list)
+
+            # Player's initial position
+            self._player_position = self._map_in_a_string.find(
+                MAZE_ELEMENTS['plyr']
+            )
+
+            # Element under player at start
+            self._element_under_player = MAZE_ELEMENTS['void']
+
 
             self.status = True
             self.status_message = MSG_START_GAME
@@ -88,8 +83,91 @@ class Map:
         # Erreur de chargement du fichier
         else:
             self.status = False
-            self.status_message = ERR_MAP_FILE.format(map_file)
+            self.status_message = ERR_MAP.format(':'.join(["mapfile", map_file]))
 
     def map_print(self):
         """ Affiche la carte avec la position de jeu courante """
-        print(self._data_text)
+        print(self._map_in_a_string)
+
+    def move_to(self, pressed_key):
+        """
+        Deplace le plyr sur la carte
+
+        :param str pressed_key: mouvement souhaite
+        :return int: une cle de la constante MOVE_STATUS
+        """
+        from pygame.locals import K_UP, K_DOWN, K_RIGHT, K_LEFT
+
+        # supprime le plyr de son emplacement actuel et on replace
+        # l'elements «dessous»
+        self._map_in_a_string = self._map_in_a_string.replace(
+            MAZE_ELEMENTS['plyr'],
+            self._element_under_player
+        )
+
+        # Recupere la position suivante
+        if pressed_key == K_UP:
+            next_position = self._player_position - MAZE_SIZE
+
+        elif pressed_key == K_DOWN:
+            next_position = self._player_position + MAZE_SIZE
+
+        elif pressed_key == K_RIGHT:
+            next_position = self._player_position + 1
+
+        elif pressed_key == K_LEFT:
+            next_position = self._player_position - 1
+
+        self._element_under_player = MAZE_ELEMENTS['void']
+
+        # Traitement en fonction de la case du prochain pas
+        next_char = self._map_in_a_string[next_position]
+        if next_char == MAZE_ELEMENTS['wall']:
+            move_status = 1
+
+        elif next_char == MAZE_ELEMENTS['exit']:
+            self._player_position = next_position
+            move_status = 2
+
+        # elif next_char == MAZE_ELEMENTS['door']:
+            # self._player_position = next_position
+            # self._element_under_player = MAZE_ELEMENTS['door']
+            # move_status = 3
+
+        else:
+            self._player_position = next_position
+            move_status = 4
+
+        # place le plyr sur sa nouvelle position
+        self.place_element(MAZE_ELEMENTS['plyr'])
+
+        return move_status
+
+    def place_element(self, element):
+        """
+        Place l'element sur la carte.
+
+        La position est celle de l'attribut self._player_position au
+        moment de l'appel.
+
+        Utilise pour place le plyrt et remettre les portes.
+
+        :param str element: element a placer sur la carte
+        """
+        pos = self._player_position
+        txt = self._map_in_a_string
+        self._map_in_a_string = txt[:pos] + element + txt[pos + 1:]
+
+    @staticmethod
+    def check_line(line):
+        """
+        Checks if a line has a good length, fill it if it's too small,
+        truncate if it's too long
+        """
+        differance = len(str(line)) - MAZE_SIZE
+        if differance < 0:
+            return line[:MAZE_SIZE]
+        elif differance > 0:
+            return line + (differance * MAZE_ELEMENTS['void'])
+        else:
+            return line
