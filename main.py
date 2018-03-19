@@ -23,23 +23,22 @@ MAP_FILE = '01.map'
 # Loading map
 MAP_GAME = Map(MAP_FILE)
 
+system('clear')
 print(MAP_GAME.status_message)
-
 MAP_GAME.map_print()
 
 # Game loop
-GAME_ON = True
-while GAME_ON:
+while MAP_GAME.status:
     for event in pygame.event.get():
         if event.type == QUIT:
-            GAME_ON = False
+            MAP_GAME.status = False
 
         if event.type == KEYDOWN:
             if event.key == K_ESCAPE:
-                GAME_ON = False
+                MAP_GAME.status = False
 
             else:
                 system('clear')
-                MAP_GAME.map_print()
                 print("move_status:{}".format(MAP_GAME.move_to(event.key)))
                 print("status_message:{}".format(MAP_GAME.status_message))
+                MAP_GAME.map_print()

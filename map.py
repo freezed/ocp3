@@ -15,9 +15,19 @@ ERR_MAP = "ERR_MAP: «{}»"
 MAZE_SIZE = 15
 
 MAZE_ELEMENTS = {'wall': '.',
-                 'exit': 'U',
+                 'exit': 'E',
                  'plyr': 'X',
                  'void': ' '}
+
+# Issue possible d'un mouvement, garder le OK toujours en fin de liste
+MOVE_STATUS = ['bad', 'wall', 'exit', 'door', 'ok']
+MOVE_STATUS_MSG = {
+    'bad': "Le déplacement «{}» n'est pas autorisé.",
+    'wall': "Le déplacement est stoppé par un mur.",
+    'exit': "Vous êtes sortit du labyrinte",
+    'door': "Vous passez une porte",
+    'ok': "Jusqu'ici, tout va bien…"
+                  }
 
 MSG_DISCLAMER = "MSG_DISCLAMER"
 MSG_START_GAME = "MSG_START_GAME"
@@ -58,27 +68,31 @@ class Map:
                 map_in_a_list = map_data.read().splitlines()
 
             # map line number
-            if len(map_in_a_list) != MAZE_SIZE:
+            if len(map_in_a_list) == MAZE_SIZE:
+                self._COLUM = MAZE_SIZE + 1
+                self._LINES = MAZE_SIZE
+                self._MAXIM = (self._COLUM * self._LINES) - 1
+                # Add map checking here
+
+                # Constructing square map
+                map_in_a_list = [self.check_line(line) for line in map_in_a_list]
+                self._map_in_a_string = '\n'.join(map_in_a_list)
+
+                # Player's initial position
+                self._player_position = self._map_in_a_string.find(
+                    MAZE_ELEMENTS['plyr']
+                )
+
+                # Element under player at start
+                self._element_under_player = MAZE_ELEMENTS['void']
+
+
+                self.status = True
+                self.status_message = MSG_START_GAME
+
+            else:
                 self.status = False
-                self.status_message = ERR_MAP.format(':'.join(["maplines", len(map_in_a_list)]))
-
-            # Add map checking here
-
-            # Constructing square map
-            self.map_in_a_list = [self.check_line(line) for line in map_in_a_list]
-            self._map_in_a_string = '\n'.join(map_in_a_list)
-
-            # Player's initial position
-            self._player_position = self._map_in_a_string.find(
-                MAZE_ELEMENTS['plyr']
-            )
-
-            # Element under player at start
-            self._element_under_player = MAZE_ELEMENTS['void']
-
-
-            self.status = True
-            self.status_message = MSG_START_GAME
+                self.status_message = ERR_MAP.format("maplines: " + str(len(map_in_a_list)))
 
         # Erreur de chargement du fichier
         else:
@@ -107,10 +121,10 @@ class Map:
 
         # Recupere la position suivante
         if pressed_key == K_UP:
-            next_position = self._player_position - MAZE_SIZE
+            next_position = self._player_position - self._COLUM
 
         elif pressed_key == K_DOWN:
-            next_position = self._player_position + MAZE_SIZE
+            next_position = self._player_position + self._COLUM
 
         elif pressed_key == K_RIGHT:
             next_position = self._player_position + 1
@@ -121,25 +135,30 @@ class Map:
         self._element_under_player = MAZE_ELEMENTS['void']
 
         # Traitement en fonction de la case du prochain pas
-        next_char = self._map_in_a_string[next_position]
-        if next_char == MAZE_ELEMENTS['wall']:
-            move_status = 1
+        if next_position >= 0 and next_position <= self._MAXIM:
+            next_char = self._map_in_a_string[next_position]
 
-        elif next_char == MAZE_ELEMENTS['exit']:
-            self._player_position = next_position
-            move_status = 2
+            if next_char == MAZE_ELEMENTS['wall']:
+                move_status = 1
 
-        # elif next_char == MAZE_ELEMENTS['door']:
-            # self._player_position = next_position
-            # self._element_under_player = MAZE_ELEMENTS['door']
-            # move_status = 3
+            elif next_char == MAZE_ELEMENTS['exit']:
+                self._player_position = next_position
+                move_status = 2
 
+            # elif next_char == MAZE_ELEMENTS['door']:
+                # self._player_position = next_position
+                # self._element_under_player = MAZE_ELEMENTS['door']
+                # move_status = 3
+
+            else:
+                self._player_position = next_position
+                move_status = 4
         else:
-            self._player_position = next_position
-            move_status = 4
+            move_status = 1
 
         # place le plyr sur sa nouvelle position
         self.place_element(MAZE_ELEMENTS['plyr'])
+        self.status_message = MOVE_STATUS_MSG[MOVE_STATUS[move_status]]+"|"+str(self._player_position)+"|"+str(self._MAXIM)
 
         return move_status
 
@@ -164,7 +183,7 @@ class Map:
         Checks if a line has a good length, fill it if it's too small,
         truncate if it's too long
         """
-        differance = len(str(line)) - MAZE_SIZE
+        differance = MAZE_SIZE - len(str(line))
         if differance < 0:
             return line[:MAZE_SIZE]
         elif differance > 0:
