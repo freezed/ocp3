@@ -1,5 +1,5 @@
 """
-Author: freezed <freezed@users.noreply.github.com> 2018-02-06
+Author: freezed <freezed@users.noreply.github.com> 2018-03-17
 Version: 0.1
 Licence: `GNU GPL v3` GNU GPL v3: http://www.gnu.org/licenses/
 
