@@ -17,6 +17,7 @@ MAZE_SIZE = 15
 MAZE_ELEMENTS = {'wall': '.',
                  'exit': 'E',
                  'plyr': 'X',
+                 'nlin': '\n',
                  'void': ' '}
 
 # Issue possible d'un mouvement, garder le OK toujours en fin de liste
@@ -128,12 +129,15 @@ class Map:
 
         elif pressed_key == K_RIGHT:
             next_position = self._player_position + 1
+            if self._map_in_a_string[next_position] == MAZE_ELEMENTS['nlin']:
+                next_position += 1
 
         elif pressed_key == K_LEFT:
             next_position = self._player_position - 1
+            if self._map_in_a_string[next_position] == MAZE_ELEMENTS['nlin']:
+                next_position -= 1
 
         self._element_under_player = MAZE_ELEMENTS['void']
-
         # Traitement en fonction de la case du prochain pas
         if next_position >= 0 and next_position <= self._MAXIM:
             next_char = self._map_in_a_string[next_position]
