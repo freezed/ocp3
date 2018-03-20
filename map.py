@@ -30,9 +30,7 @@ MOVE_STATUS_MSG = {
     'ok': "Jusqu'ici, tout va bien…"
                   }
 
-MSG_DISCLAMER = "MSG_DISCLAMER"
-MSG_START_GAME = "MSG_START_GAME"
-MSG_END_GAME = "MSG_END_GAME"
+MSG_START_GAME = "Welcome in OCP3.\nUse arrow keys to play, any other key to quit."
 
 
 # CLASS
@@ -139,29 +137,24 @@ class Map:
         if next_position >= 0 and next_position <= self._MAXIM:
             next_char = self._map_in_a_string[next_position]
 
-            if next_char == MAZE_ELEMENTS['wall'] or next_char == MAZE_ELEMENTS['nlin']:
-                move_status = 1
+            if next_char == MAZE_ELEMENTS['void']:
+                self._player_position = next_position
+                self.status_message = MOVE_STATUS_MSG['ok']
 
             elif next_char == MAZE_ELEMENTS['exit']:
                 self._player_position = next_position
-                move_status = 2
+                self.status = False
+                self.status_message = MOVE_STATUS_MSG['exit']
 
-            # elif next_char == MAZE_ELEMENTS['door']:
-                # self._player_position = next_position
-                # self._element_under_player = MAZE_ELEMENTS['door']
-                # move_status = 3
-
-            else:
-                self._player_position = next_position
-                move_status = 4
+            else:  # MAZE_ELEMENTS wall, door or nline
+                self.status_message = MOVE_STATUS_MSG['wall']
         else:
-            move_status = 1
+            self.status_message = MOVE_STATUS_MSG['wall']
 
         # place le plyr sur sa nouvelle position
         self.place_element(MAZE_ELEMENTS['plyr'])
-        self.status_message = MOVE_STATUS_MSG[MOVE_STATUS[move_status]]+"|"+str(self._player_position)+"|"+str(self._MAXIM)
-
-        return move_status
+        # Debug
+        self.status_message += "|"+str(self._player_position)+"|"+str(self._MAXIM)
 
     def place_element(self, element):
         """

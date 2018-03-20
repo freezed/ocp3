@@ -12,13 +12,14 @@ details
 """
 from os import system
 import pygame
-from pygame.locals import K_ESCAPE, KEYDOWN, QUIT
+from pygame.locals import K_UP, K_DOWN, K_RIGHT, K_LEFT, KEYDOWN, QUIT
 from map import Map
 
 pygame.init()
 SCREEN = pygame.display.set_mode((100, 100))
 
 MAP_FILE = '01.map'
+GAME_KEYS = [K_UP, K_DOWN, K_RIGHT, K_LEFT]
 
 # Loading map
 MAP_GAME = Map(MAP_FILE)
@@ -34,11 +35,12 @@ while MAP_GAME.status:
             MAP_GAME.status = False
 
         if event.type == KEYDOWN:
-            if event.key == K_ESCAPE:
-                MAP_GAME.status = False
+            if event.key in GAME_KEYS:
+                MAP_GAME.move_to(event.key)
 
             else:
-                system('clear')
-                print("move_status:{}".format(MAP_GAME.move_to(event.key)))
-                print("status_message:{}".format(MAP_GAME.status_message))
-                MAP_GAME.map_print()
+                MAP_GAME.status = False
+
+            system('clear')
+            print("status_message:{}".format(MAP_GAME.status_message))
+            MAP_GAME.map_print()
