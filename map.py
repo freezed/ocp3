@@ -129,20 +129,17 @@ class Map:
 
         elif pressed_key == K_RIGHT:
             next_position = self._player_position + 1
-            if self._map_in_a_string[next_position] == MAZE_ELEMENTS['nlin']:
-                next_position += 1
 
         elif pressed_key == K_LEFT:
             next_position = self._player_position - 1
-            if self._map_in_a_string[next_position] == MAZE_ELEMENTS['nlin']:
-                next_position -= 1
 
         self._element_under_player = MAZE_ELEMENTS['void']
+
         # Traitement en fonction de la case du prochain pas
         if next_position >= 0 and next_position <= self._MAXIM:
             next_char = self._map_in_a_string[next_position]
 
-            if next_char == MAZE_ELEMENTS['wall']:
+            if next_char == MAZE_ELEMENTS['wall'] or next_char == MAZE_ELEMENTS['nlin']:
                 move_status = 1
 
             elif next_char == MAZE_ELEMENTS['exit']:
