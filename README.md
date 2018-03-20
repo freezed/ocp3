@@ -39,12 +39,10 @@ guard without all the objects, he dies (according to the evolution theory).
 
 1. Create the starting frame
     * [x] Initialize a Git repo on Github
-    * [ ] Create the labyrinth without the graphical user interface
-    * [ ] When the logic of your labyrinth is made, use the PyGame for
-    the graphical interface
-    * [ ] Then focus on the three main elements of the game: the guard, _McGyver_ and the objects.
-    * [ ] Represent them in your program
-    * [ ] Placed them at the beginning of the game
+    * [x] Create the labyrinth without the graphical user interface
+    * [ ] Start the graphical interface with PyGame
+    * [ ] Represent the guard, _McGyver_ and the objects in your program
+    and placed them at the beginning of the game
 2. Animate the character
     * [ ] The only moving element is _McGyver_, create classes methods for
     animation and finding the exit
