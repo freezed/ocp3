@@ -12,17 +12,54 @@ details
 """
 from os import system
 import pygame
-from pygame.locals import K_UP, K_DOWN, K_RIGHT, K_LEFT, KEYDOWN, QUIT
-from map import Map
+from pygame.locals import (
+    K_UP, K_DOWN, K_RIGHT, K_LEFT, KEYDOWN, QUIT, RESIZABLE
+)
+from map import Map, MAZE_ELEMENTS, MAZE_SIZE
+
+# Configuration
+CELL_SIZE_PX = 30
+
+MAZE_ELEMENTS_TILES = {
+    'wall': 'img/zebra-30.png',
+    'exit': 'img/g-orange-transp-30.png',
+    'plyr': 'img/player-30.png',
+    'void': 'img/blue-transp-30.png'
+}
+UNKNOWN_TILE = 'img/unknown-30.png'
+MAP_FILE = '01.map'
+
+MAZE_SIZE_CEL = MAZE_SIZE
+GAME_KEYS = [K_UP, K_DOWN, K_RIGHT, K_LEFT]
+WINDOW_SIZE_PX = CELL_SIZE_PX * MAZE_SIZE_CEL
 
 pygame.init()
-SCREEN = pygame.display.set_mode((100, 100))
 
-MAP_FILE = '01.map'
-GAME_KEYS = [K_UP, K_DOWN, K_RIGHT, K_LEFT]
-
+WINDOW = pygame.display.set_mode(
+    (WINDOW_SIZE_PX, WINDOW_SIZE_PX), RESIZABLE
+)
 # Loading map
 MAP_GAME = Map(MAP_FILE)
+
+# Draw maze
+back_tiles = []
+for cell, element in enumerate(MAP_GAME.map_print().replace('\n', '')):
+    key = [key for (key, val) in MAZE_ELEMENTS.items() if val == element][0]
+
+    if key in MAZE_ELEMENTS_TILES:
+        back_tiles.append(
+            pygame.image.load(MAZE_ELEMENTS_TILES[key]).convert()
+        )
+
+    else:
+        back_tiles.append(pygame.image.load(UNKNOWN_TILE).convert())
+
+    x = (cell % MAZE_SIZE_CEL) * CELL_SIZE_PX
+    y = (cell // MAZE_SIZE_CEL) * CELL_SIZE_PX
+    WINDOW.blit(back_tiles[cell], (x, y))
+
+# Refresh
+pygame.display.flip()
 
 system('clear')
 print(MAP_GAME.status_message)
