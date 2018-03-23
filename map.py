@@ -100,7 +100,7 @@ class Map:
 
     def map_print(self):
         """ Affiche la carte avec la position de jeu courante """
-        print(self._map_in_a_string)
+        # print(self._map_in_a_string)
         return self._map_in_a_string
 
     def move_to(self, pressed_key):
