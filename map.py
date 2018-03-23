@@ -157,7 +157,7 @@ class Map:
         # Debug
         self.status_message += "|"+str(self._player_position)+"|"+str(self._MAXIM)
 
-    def place_element(self, element):
+    def place_element(self, element, **kwargs):
         """
         Place l'element sur la carte.
 
@@ -168,8 +168,16 @@ class Map:
 
         :param str element: element a placer sur la carte
         """
-        pos = self._player_position
-        txt = self._map_in_a_string
+        if 'pos' in kwargs:
+            pos = kwargs['pos']
+        else:
+            pos = self._player_position
+
+        if 'txt' in kwargs:
+            txt = kwargs['txt']
+        else:
+            txt = self._map_in_a_string
+
         self._map_in_a_string = txt[:pos] + element + txt[pos + 1:]
 
     @staticmethod
