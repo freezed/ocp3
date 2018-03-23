@@ -21,11 +21,12 @@ from map import Map, MAZE_ELEMENTS, MAZE_SIZE
 CELL_SIZE_PX = 30
 
 MAZE_ELEMENTS_TILES = {
-    'wall': 'img/zebra-30.png',
+    'wall': 'img/transp-30.png',
     'exit': 'img/g-orange-transp-30.png',
     'plyr': 'img/player-30.png',
-    'void': 'img/blue-transp-30.png'
+    'void': 'img/blue-white-30.png'
 }
+BACKGROUND_IMG = 'img/brick-800.png'
 UNKNOWN_TILE = 'img/unknown-30.png'
 MAP_FILE = '01.map'
 
@@ -38,6 +39,9 @@ pygame.init()
 WINDOW = pygame.display.set_mode(
     (WINDOW_SIZE_PX, WINDOW_SIZE_PX), RESIZABLE
 )
+BACKGROUND = pygame.image.load(BACKGROUND_IMG).convert()
+WINDOW.blit(BACKGROUND, (0, 0))
+
 # Loading map
 MAP_GAME = Map(MAP_FILE)
 
@@ -48,7 +52,7 @@ for cell, element in enumerate(MAP_GAME.map_print().replace('\n', '')):
 
     if key in MAZE_ELEMENTS_TILES:
         back_tiles.append(
-            pygame.image.load(MAZE_ELEMENTS_TILES[key]).convert()
+            pygame.image.load(MAZE_ELEMENTS_TILES[key]).convert_alpha()
         )
 
     else:
