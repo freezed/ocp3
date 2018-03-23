@@ -24,7 +24,10 @@ MAZE_ELEMENTS_TILES = {
     'wall': 'img/transp-30.png',
     'exit': 'img/g-orange-transp-30.png',
     'plyr': 'img/player-30.png',
-    'void': 'img/blue-white-30.png'
+    'void': 'img/blue-white-30.png',
+    'tube': 'img/1-blue-transp-30.png',
+    'needle': 'img/2-blue-transp-30.png',
+    'ether': 'img/3-blue-transp-30.png',
 }
 BACKGROUND_IMG = 'img/brick-800.png'
 UNKNOWN_TILE = 'img/unknown-30.png'

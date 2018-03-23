@@ -6,11 +6,23 @@ Licence: `GNU GPL v3` GNU GPL v3: http://www.gnu.org/licenses/
 This file is part of [_ocp3_ project](https://github.com/freezed/ocp3)
 """
 import os
+import random
 
 # CONFIGURATION
 
 # Error message
 ERR_MAP = "ERR_MAP: «{}»"
+
+ELEMENT_LIST = [
+    {'symbol': 'n', 'name': 'needle', 'cross': True, 'ressurect': False, 'collect': True, 'tile': 'img/3-blue-transp-30.png'},
+    {'symbol': 't', 'name': 'tube', 'cross': True, 'ressurect': False, 'collect': True, 'tile': 'img/1-blue-transp-30.png'},
+    {'symbol': 'e', 'name': 'ether', 'cross': True, 'ressurect': False, 'collect': True, 'tile': 'img/2-blue-transp-30.png'},
+    {'symbol': 'E', 'name': 'exit', 'cross': True, 'ressurect': False, 'collect': False, 'tile': 'd'},
+    {'symbol': ' ', 'name': 'void', 'cross': True, 'ressurect': True, 'collect': False, 'tile': 'e'},
+    {'symbol': '.', 'name': 'wall', 'cross': False, 'ressurect': False, 'collect': False, 'tile': 'f'},
+    {'symbol': 'X', 'name': 'player', 'cross': False, 'ressurect': False, 'collect': False, 'tile': 'g'},
+    {'symbol': '\n', 'name': 'nlin', 'cross': False, 'ressurect': False, 'collect': False, 'tile': 'h'},
+]
 
 MAZE_SIZE = 15
 
@@ -18,6 +30,9 @@ MAZE_ELEMENTS = {'wall': '.',
                  'exit': 'E',
                  'plyr': 'X',
                  'nlin': '\n',
+                 'needle': 'n',
+                 'tube': 't',
+                 'ether': 'e',
                  'void': ' '}
 
 # Issue possible d'un mouvement, garder le OK toujours en fin de liste
@@ -85,6 +100,12 @@ class Map:
                 # Element under player at start
                 self._element_under_player = MAZE_ELEMENTS['void']
 
+                # Place collectables on the map
+                void_symbol = [element['symbol'] for element in ELEMENT_LIST if element['name'] == 'void'][0]
+                collectables = (element['symbol'] for element in ELEMENT_LIST if element['collect'] == True)
+                for symbol_to_place in collectables:
+                    position = random.choice([idx for (idx, value) in enumerate(self._map_in_a_string) if value == void_symbol])
+                    self.place_element(symbol_to_place, pos=position)
 
                 self.status = True
                 self.status_message = MSG_START_GAME
