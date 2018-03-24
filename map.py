@@ -8,7 +8,7 @@ This file is part of [_ocp3_ project](https://github.com/freezed/ocp3)
 import os
 import random
 from pygame.locals import K_UP, K_DOWN, K_RIGHT, K_LEFT
-from conf import ELEMENT_LIST, elmt_val, ERR_MAP, MOVE_STATUS_MSG, MSG_START_GAME, MAZE_SIZE_TIL
+from conf import elmt_val, ERR_MAP, MOVE_STATUS_MSG, MSG_START_GAME, MAZE_SIZE_TIL
 
 
 class Map:
@@ -62,8 +62,7 @@ class Map:
                 self._element_under_player = elmt_val('symbol', 'name', 'void', 0)
 
                 # Place collectables on the map
-                collectables = (element['symbol'] for element in ELEMENT_LIST if element['collect'] is True)
-                for symbol_to_place in collectables:
+                for symbol_to_place in elmt_val('symbol', 'collect', True):
                     position = random.choice([idx for (idx, value) in enumerate(self._map_in_a_string) if value == elmt_val('symbol', 'name', 'void', 0)])
                     self.place_element(symbol_to_place, pos=position)
 

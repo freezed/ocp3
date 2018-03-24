@@ -15,22 +15,19 @@ from pygame.locals import (
     K_UP, K_DOWN, K_RIGHT, K_LEFT, KEYDOWN, QUIT, RESIZABLE
 )
 from map import Map
-from conf import BACKGROUND_IMG, CELL_SIZE_PX, ELEMENT_LIST, MAP_FILE, MAZE_ELEMENTS, MAZE_ELEMENTS_TILES, MAZE_SIZE_TIL
+from conf import BACKGROUND_IMG, CELL_SIZE_PX, elmt_val, MAP_FILE, MAZE_SIZE_TIL
 
 # FUNCTIONS
 def maze_draw():
     """ Take a map string and generate a graphic maze """
     back_tiles = []
     for cell, element in enumerate(MAP_GAME.map_print().replace('\n', '')):
-        key = [key for (key, val) in MAZE_ELEMENTS.items() if val == element][0]
+        img = elmt_val('tile', 'symbol', element, 0)
 
-        if key in MAZE_ELEMENTS_TILES:
-            back_tiles.append(
-                pygame.image.load(MAZE_ELEMENTS_TILES[key]).convert_alpha()
-            )
-
-        else:
+        if img is False:
             back_tiles.append(pygame.image.load(UNKNOWN_TILE).convert())
+        else:
+            back_tiles.append(pygame.image.load(img).convert_alpha())
 
         x = (cell % MAZE_SIZE_TIL) * CELL_SIZE_PX
         y = (cell // MAZE_SIZE_TIL) * CELL_SIZE_PX

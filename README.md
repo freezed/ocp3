@@ -44,12 +44,12 @@ guard without all the objects, he dies (according to the evolution theory).
     * [x] Represent the guard, _McGyver_ and the objects in your program
     and placed them at the beginning of the game
 2. Animate the character
-    * [ ] The only moving element is _McGyver_, create classes methods for
+    * [x] The only moving element is _McGyver_, create classes methods for
     animation and finding the exit
     * [x] make a simplified version of the game in which _McGyver_ wins
     when he arrives in front of the goalkeeper
 3. Recovering objects
-    * [ ] Add object management
+    * [x] Add object management
     * [ ] The way he pick them up
     * [ ] Add a counter that will list them.
 4. Win!
