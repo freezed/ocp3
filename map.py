@@ -26,15 +26,6 @@ ELEMENT_LIST = [
 
 MAZE_SIZE = 15
 
-MAZE_ELEMENTS = {'wall': '.',
-                 'exit': 'E',
-                 'plyr': 'X',
-                 'nlin': '\n',
-                 'needle': 'n',
-                 'tube': 't',
-                 'ether': 'e',
-                 'void': ' '}
-
 # Issue possible d'un mouvement, garder le OK toujours en fin de liste
 MOVE_STATUS = ['bad', 'wall', 'exit', 'door', 'ok']
 MOVE_STATUS_MSG = {
@@ -47,6 +38,25 @@ MOVE_STATUS_MSG = {
 
 MSG_START_GAME = "Welcome in OCP3.\nUse arrow keys to play, any other key to quit."
 
+
+# FUNCTIONS
+
+def elmt_val(kval, ksel, vsel, nline=False):
+    """
+    Return value(s) from ELEMENT_LIST
+
+    :param str kval: key of the value returned
+    :param str ksel: key of the selection criteria
+    :param str vsel: value of the selection criteria
+    :param bool/int nline: Default False, return value(s) in a list,
+    use a int() to return the `n` value from the list
+
+    :return str/bool/…:
+    """
+    if nline is False:
+        return [element[kval] for element in ELEMENT_LIST if element[ksel] == vsel]
+    else:
+        return [element[kval] for element in ELEMENT_LIST if element[ksel] == vsel][nline]
 
 # CLASS
 
@@ -94,17 +104,16 @@ class Map:
 
                 # Player's initial position
                 self._player_position = self._map_in_a_string.find(
-                    MAZE_ELEMENTS['plyr']
+                    elmt_val('symbol', 'name', 'player', 0)
                 )
 
                 # Element under player at start
-                self._element_under_player = MAZE_ELEMENTS['void']
+                self._element_under_player = elmt_val('symbol', 'name', 'void', 0)
 
                 # Place collectables on the map
-                void_symbol = [element['symbol'] for element in ELEMENT_LIST if element['name'] == 'void'][0]
                 collectables = (element['symbol'] for element in ELEMENT_LIST if element['collect'] == True)
                 for symbol_to_place in collectables:
-                    position = random.choice([idx for (idx, value) in enumerate(self._map_in_a_string) if value == void_symbol])
+                    position = random.choice([idx for (idx, value) in enumerate(self._map_in_a_string) if value == elmt_val('symbol', 'name', 'void', 0)])
                     self.place_element(symbol_to_place, pos=position)
 
                 self.status = True
@@ -136,7 +145,7 @@ class Map:
         # supprime le plyr de son emplacement actuel et on replace
         # l'elements «dessous»
         self._map_in_a_string = self._map_in_a_string.replace(
-            MAZE_ELEMENTS['plyr'],
+            elmt_val('symbol', 'name', 'player', 0),
             self._element_under_player
         )
 
@@ -153,28 +162,28 @@ class Map:
         elif pressed_key == K_LEFT:
             next_position = self._player_position - 1
 
-        self._element_under_player = MAZE_ELEMENTS['void']
+        self._element_under_player = elmt_val('symbol', 'name', 'void', 0)
 
         # Traitement en fonction de la case du prochain pas
         if next_position >= 0 and next_position <= self._MAXIM:
             next_char = self._map_in_a_string[next_position]
 
-            if next_char == MAZE_ELEMENTS['void']:
+            if next_char == elmt_val('symbol', 'name', 'void', 0):
                 self._player_position = next_position
                 self.status_message = MOVE_STATUS_MSG['ok']
 
-            elif next_char == MAZE_ELEMENTS['exit']:
+            elif next_char == elmt_val('symbol', 'name', 'exit', 0):
                 self._player_position = next_position
                 self.status = False
                 self.status_message = MOVE_STATUS_MSG['exit']
 
-            else:  # MAZE_ELEMENTS wall, door or nline
+            else:  # wall, door or nline
                 self.status_message = MOVE_STATUS_MSG['wall']
         else:
             self.status_message = MOVE_STATUS_MSG['wall']
 
         # place le plyr sur sa nouvelle position
-        self.place_element(MAZE_ELEMENTS['plyr'])
+        self.place_element(elmt_val('symbol', 'name', 'player', 0))
         # Debug
         self.status_message += "|"+str(self._player_position)+"|"+str(self._MAXIM)
 
@@ -211,6 +220,6 @@ class Map:
         if differance < 0:
             return line[:MAZE_SIZE]
         elif differance > 0:
-            return line + (differance * MAZE_ELEMENTS['void'])
+            return line + (differance * elmt_val('symbol', 'name', 'void', 0))
         else:
             return line
