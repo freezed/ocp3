@@ -7,58 +7,9 @@ This file is part of [_ocp3_ project](https://github.com/freezed/ocp3)
 """
 import os
 import random
+from pygame.locals import K_UP, K_DOWN, K_RIGHT, K_LEFT
+from conf import ELEMENT_LIST, elmt_val, ERR_MAP, MOVE_STATUS_MSG, MSG_START_GAME, MAZE_SIZE_TIL
 
-# CONFIGURATION
-
-# Error message
-ERR_MAP = "ERR_MAP: «{}»"
-
-ELEMENT_LIST = [
-    {'symbol': 'n', 'name': 'needle', 'cross': True, 'ressurect': False, 'collect': True, 'tile': 'img/3-blue-transp-30.png'},
-    {'symbol': 't', 'name': 'tube', 'cross': True, 'ressurect': False, 'collect': True, 'tile': 'img/1-blue-transp-30.png'},
-    {'symbol': 'e', 'name': 'ether', 'cross': True, 'ressurect': False, 'collect': True, 'tile': 'img/2-blue-transp-30.png'},
-    {'symbol': 'E', 'name': 'exit', 'cross': True, 'ressurect': False, 'collect': False, 'tile': 'd'},
-    {'symbol': ' ', 'name': 'void', 'cross': True, 'ressurect': True, 'collect': False, 'tile': 'e'},
-    {'symbol': '.', 'name': 'wall', 'cross': False, 'ressurect': False, 'collect': False, 'tile': 'f'},
-    {'symbol': 'X', 'name': 'player', 'cross': False, 'ressurect': False, 'collect': False, 'tile': 'g'},
-    {'symbol': '\n', 'name': 'nlin', 'cross': False, 'ressurect': False, 'collect': False, 'tile': 'h'},
-]
-
-MAZE_SIZE = 15
-
-# Issue possible d'un mouvement, garder le OK toujours en fin de liste
-MOVE_STATUS = ['bad', 'wall', 'exit', 'door', 'ok']
-MOVE_STATUS_MSG = {
-    'bad': "Le déplacement «{}» n'est pas autorisé.",
-    'wall': "Le déplacement est stoppé par un mur.",
-    'exit': "Vous êtes sortit du labyrinte",
-    'door': "Vous passez une porte",
-    'ok': "Jusqu'ici, tout va bien…"
-                  }
-
-MSG_START_GAME = "Welcome in OCP3.\nUse arrow keys to play, any other key to quit."
-
-
-# FUNCTIONS
-
-def elmt_val(kval, ksel, vsel, nline=False):
-    """
-    Return value(s) from ELEMENT_LIST
-
-    :param str kval: key of the value returned
-    :param str ksel: key of the selection criteria
-    :param str vsel: value of the selection criteria
-    :param bool/int nline: Default False, return value(s) in a list,
-    use a int() to return the `n` value from the list
-
-    :return str/bool/…:
-    """
-    if nline is False:
-        return [element[kval] for element in ELEMENT_LIST if element[ksel] == vsel]
-    else:
-        return [element[kval] for element in ELEMENT_LIST if element[ksel] == vsel][nline]
-
-# CLASS
 
 class Map:
     """
@@ -92,9 +43,9 @@ class Map:
                 map_in_a_list = map_data.read().splitlines()
 
             # map line number
-            if len(map_in_a_list) == MAZE_SIZE:
-                self._COLUM = MAZE_SIZE + 1
-                self._LINES = MAZE_SIZE
+            if len(map_in_a_list) == MAZE_SIZE_TIL:
+                self._COLUM = MAZE_SIZE_TIL + 1
+                self._LINES = MAZE_SIZE_TIL
                 self._MAXIM = (self._COLUM * self._LINES) - 1
                 # Add map checking here
 
@@ -111,7 +62,7 @@ class Map:
                 self._element_under_player = elmt_val('symbol', 'name', 'void', 0)
 
                 # Place collectables on the map
-                collectables = (element['symbol'] for element in ELEMENT_LIST if element['collect'] == True)
+                collectables = (element['symbol'] for element in ELEMENT_LIST if element['collect'] is True)
                 for symbol_to_place in collectables:
                     position = random.choice([idx for (idx, value) in enumerate(self._map_in_a_string) if value == elmt_val('symbol', 'name', 'void', 0)])
                     self.place_element(symbol_to_place, pos=position)
@@ -140,8 +91,6 @@ class Map:
         :param str pressed_key: mouvement souhaite
         :return int: une cle de la constante MOVE_STATUS
         """
-        from pygame.locals import K_UP, K_DOWN, K_RIGHT, K_LEFT
-
         # supprime le plyr de son emplacement actuel et on replace
         # l'elements «dessous»
         self._map_in_a_string = self._map_in_a_string.replace(
@@ -198,6 +147,8 @@ class Map:
 
         :param str element: element a placer sur la carte
         """
+        # FIXME cannot find a way to define default value to the
+        # method's arguments with class attributes
         if 'pos' in kwargs:
             pos = kwargs['pos']
         else:
@@ -216,9 +167,9 @@ class Map:
         Checks if a line has a good length, fill it if it's too small,
         truncate if it's too long
         """
-        differance = MAZE_SIZE - len(str(line))
+        differance = MAZE_SIZE_TIL - len(str(line))
         if differance < 0:
-            return line[:MAZE_SIZE]
+            return line[:MAZE_SIZE_TIL]
         elif differance > 0:
             return line + (differance * elmt_val('symbol', 'name', 'void', 0))
         else:

@@ -10,33 +10,14 @@ Main file for [_ocp3_ project](https://github.com/freezed/ocp3)
 See [README](https://github.com/freezed/ocp3/blob/master/README.md) for
 details
 """
-from os import system
 import pygame
 from pygame.locals import (
     K_UP, K_DOWN, K_RIGHT, K_LEFT, KEYDOWN, QUIT, RESIZABLE
 )
-from map import Map, MAZE_ELEMENTS, MAZE_SIZE
+from map import Map
+from conf import BACKGROUND_IMG, CELL_SIZE_PX, ELEMENT_LIST, MAP_FILE, MAZE_ELEMENTS, MAZE_ELEMENTS_TILES, MAZE_SIZE_TIL
 
-# Configuration
-CELL_SIZE_PX = 30
-
-MAZE_ELEMENTS_TILES = {
-    'wall': 'img/transp-30.png',
-    'exit': 'img/g-orange-transp-30.png',
-    'plyr': 'img/player-30.png',
-    'void': 'img/blue-white-30.png',
-    'tube': 'img/1-blue-transp-30.png',
-    'needle': 'img/2-blue-transp-30.png',
-    'ether': 'img/3-blue-transp-30.png',
-}
-BACKGROUND_IMG = 'img/brick-800.png'
-UNKNOWN_TILE = 'img/unknown-30.png'
-MAP_FILE = '01.map'
-
-MAZE_SIZE_CEL = MAZE_SIZE
-GAME_KEYS = [K_UP, K_DOWN, K_RIGHT, K_LEFT]
-WINDOW_SIZE_PX = CELL_SIZE_PX * MAZE_SIZE_CEL
-
+# FUNCTIONS
 def maze_draw():
     """ Take a map string and generate a graphic maze """
     back_tiles = []
@@ -51,12 +32,16 @@ def maze_draw():
         else:
             back_tiles.append(pygame.image.load(UNKNOWN_TILE).convert())
 
-        x = (cell % MAZE_SIZE_CEL) * CELL_SIZE_PX
-        y = (cell // MAZE_SIZE_CEL) * CELL_SIZE_PX
+        x = (cell % MAZE_SIZE_TIL) * CELL_SIZE_PX
+        y = (cell // MAZE_SIZE_TIL) * CELL_SIZE_PX
         WINDOW.blit(back_tiles[cell], (x, y))
 
     # Refresh
     pygame.display.flip()
+
+# MAIN SCRIPT
+GAME_KEYS = [K_UP, K_DOWN, K_RIGHT, K_LEFT]
+WINDOW_SIZE_PX = CELL_SIZE_PX * MAZE_SIZE_TIL
 
 pygame.init()
 
@@ -86,13 +71,10 @@ while MAP_GAME.status:
             if event.key in GAME_KEYS:
                 MAP_GAME.move_to(event.key)
 
-
             else:
                 MAP_GAME.status = False
 
-            # system('clear')
             print("status_message:{}".format(MAP_GAME.status_message))
-            # MAP_GAME.map_print()
 
             # Draw maze
             maze_draw()
