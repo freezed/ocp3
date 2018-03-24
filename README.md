@@ -50,7 +50,7 @@ guard without all the objects, he dies (according to the evolution theory).
     when he arrives in front of the goalkeeper
 3. Recovering objects
     * [x] Add object management
-    * [ ] The way he pick them up
+    * [x] The way he pick them up
     * [ ] Add a counter that will list them.
 4. Win!
     * [ ] _McGyver_ has picked up all the objects and asleep the guard

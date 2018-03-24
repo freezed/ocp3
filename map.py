@@ -68,6 +68,7 @@ class Map:
 
                 self.status = True
                 self.status_message = MSG_START_GAME
+                self.collected_items = []
 
             else:
                 self.status = False
@@ -120,6 +121,12 @@ class Map:
                 self._player_position = next_position
                 self.status_message = MOVE_STATUS_MSG['ok']
 
+            elif next_char in elmt_val('symbol', 'collect', True):
+                self._player_position = next_position
+                self.status_message = MOVE_STATUS_MSG['collect'].format(elmt_val('name', 'symbol', next_char, 0))
+                self._element_under_player = elmt_val('symbol', 'name', 'void', 0)
+                self.collected_items.append(elmt_val('name', 'symbol', next_char, 0))
+
             elif next_char == elmt_val('symbol', 'name', 'exit', 0):
                 self._player_position = next_position
                 self.status = False
@@ -133,7 +140,7 @@ class Map:
         # place le plyr sur sa nouvelle position
         self.place_element(elmt_val('symbol', 'name', 'player', 0))
         # Debug
-        self.status_message += "|"+str(self._player_position)+"|"+str(self._MAXIM)
+        self.status_message += "|"+str(self.collected_items)
 
     def place_element(self, element, **kwargs):
         """
