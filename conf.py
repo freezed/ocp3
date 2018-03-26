@@ -19,11 +19,11 @@ ELEMENT_LIST = [
 ]
 
 # Possible returns of a move, keep the «ok» at the end
-MOVE_STATUS = ['bad', 'wall', 'exit', 'collect', 'ok']
+MOVE_STATUS = ['looser', 'wall', 'winner', 'collect', 'ok']
 MOVE_STATUS_MSG = {
-    'bad': "Le déplacement «{}» n'est pas autorisé.",
+    'looser': "Vous vous êtes fait assommé! Pour endormir le garde, il manqait: {}.\nPerdu!",
     'wall': "Le déplacement est stoppé par un mur.",
-    'exit': "Vous êtes sortit du labyrinte",
+    'winner': "Gagné! Vous avez endormis le garde avec votre seringue.",
     'collect': "Vous ramassez l'objet «{}»",
     'ok': "Jusqu'ici, tout va bien…"
 }

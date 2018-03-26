@@ -81,7 +81,6 @@ class Map:
 
     def map_print(self):
         """ Affiche la carte avec la position de jeu courante """
-        # print(self._map_in_a_string)
         return self._map_in_a_string
 
     def move_to(self, pressed_key):
@@ -128,9 +127,12 @@ class Map:
                 self.collected_items.append(elmt_val('name', 'symbol', next_char, 0))
 
             elif next_char == elmt_val('symbol', 'name', 'exit', 0):
-                self._player_position = next_position
                 self.status = False
-                self.status_message = MOVE_STATUS_MSG['exit']
+                if sorted(self.collected_items) == sorted(elmt_val('name', 'collect', True)):
+                    self.status_message = MOVE_STATUS_MSG['winner']
+                else:
+                    missed_item_flist = ', '.join((item for item in elmt_val('name', 'collect', True) if item not in self.collected_items))
+                    self.status_message = MOVE_STATUS_MSG['looser'].format(missed_item_flist)
 
             else:  # wall, door or nline
                 self.status_message = MOVE_STATUS_MSG['wall']
@@ -139,8 +141,6 @@ class Map:
 
         # place le plyr sur sa nouvelle position
         self.place_element(elmt_val('symbol', 'name', 'player', 0))
-        # Debug
-        self.status_message += "|"+str(self.collected_items)
 
     def place_element(self, element, **kwargs):
         """

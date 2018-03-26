@@ -53,7 +53,7 @@ guard without all the objects, he dies (according to the evolution theory).
     * [x] The way he pick them up
     * [ ] Add a counter that will list them.
 4. Win!
-    * [ ] _McGyver_ has picked up all the objects and asleep the guard
+    * [x] _McGyver_ has picked up all the objects and asleep the guard
 
 ### Deliverables
 
