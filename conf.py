@@ -63,3 +63,23 @@ def elmt_val(kval, ksel, vsel, nline=False):
             return [element[kval] for element in ELEMENT_LIST if element[ksel] == vsel][nline]
     except IndexError:
         return False
+
+
+def maze_draw(WINDOW, map_string):
+    """ Take a map string and generate a graphic maze """
+    import pygame
+    back_tiles = []
+    for cell, element in enumerate(map_string):
+        img = elmt_val('tile', 'symbol', element, 0)
+
+        if img is False:
+            back_tiles.append(pygame.image.load(UNKNOWN_TILE).convert())
+        else:
+            back_tiles.append(pygame.image.load(img).convert_alpha())
+
+        x = (cell % MAZE_SIZE_TIL) * CELL_SIZE_PX
+        y = (cell // MAZE_SIZE_TIL) * CELL_SIZE_PX + CELL_SIZE_PX
+        WINDOW.blit(back_tiles[cell], (x, y))
+
+    # Refresh
+    pygame.display.flip()

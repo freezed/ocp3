@@ -15,26 +15,7 @@ from pygame.locals import (
     K_UP, K_DOWN, K_RIGHT, K_LEFT, KEYDOWN, QUIT, RESIZABLE
 )
 from map import Map
-from conf import BACKGROUND_IMG, CELL_SIZE_PX, elmt_val, MAP_FILE, MAZE_SIZE_TIL
-
-# FUNCTIONS
-def maze_draw():
-    """ Take a map string and generate a graphic maze """
-    back_tiles = []
-    for cell, element in enumerate(MAP_GAME.map_print().replace('\n', '')):
-        img = elmt_val('tile', 'symbol', element, 0)
-
-        if img is False:
-            back_tiles.append(pygame.image.load(UNKNOWN_TILE).convert())
-        else:
-            back_tiles.append(pygame.image.load(img).convert_alpha())
-
-        x = (cell % MAZE_SIZE_TIL) * CELL_SIZE_PX
-        y = (cell // MAZE_SIZE_TIL) * CELL_SIZE_PX
-        WINDOW.blit(back_tiles[cell], (x, y))
-
-    # Refresh
-    pygame.display.flip()
+from conf import BACKGROUND_IMG, CELL_SIZE_PX, elmt_val, MAP_FILE, maze_draw, MAZE_SIZE_TIL
 
 # MAIN SCRIPT
 GAME_KEYS = [K_UP, K_DOWN, K_RIGHT, K_LEFT]
@@ -43,16 +24,16 @@ WINDOW_SIZE_PX = CELL_SIZE_PX * MAZE_SIZE_TIL
 pygame.init()
 
 WINDOW = pygame.display.set_mode(
-    (WINDOW_SIZE_PX, WINDOW_SIZE_PX), RESIZABLE
+    (WINDOW_SIZE_PX, WINDOW_SIZE_PX + CELL_SIZE_PX), RESIZABLE
 )
 BACKGROUND = pygame.image.load(BACKGROUND_IMG).convert()
-WINDOW.blit(BACKGROUND, (0, 0))
+WINDOW.blit(BACKGROUND, (0, CELL_SIZE_PX))
 
 # Loading map
 MAP_GAME = Map(MAP_FILE)
 
 # Draw maze
-maze_draw()
+maze_draw(WINDOW, MAP_GAME.map_print().replace('\n', ''))
 
 # system('clear')
 print(MAP_GAME.status_message)
@@ -74,4 +55,4 @@ while MAP_GAME.status:
             print("status_message:{}".format(MAP_GAME.status_message))
 
             # Draw maze
-            maze_draw()
+            maze_draw(WINDOW, MAP_GAME.map_print().replace('\n', ''))
