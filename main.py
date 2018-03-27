@@ -15,7 +15,7 @@ from pygame.locals import (
     K_UP, K_DOWN, K_RIGHT, K_LEFT, KEYDOWN, QUIT, RESIZABLE
 )
 from map import Map
-from conf import BACKGROUND_IMG, CAPTION, MAP_FILE, HEADER_HEIGHT, maze_draw, set_header, WIN_DIM
+from conf import BACKGROUND_IMG, CAPTION, MAP_FILE, HEADER_HEIGHT, maze_draw, MSG_END, MSG_QUIT, set_header, WIN_DIM
 
 # Constant calculation
 GAME_KEYS = [K_UP, K_DOWN, K_RIGHT, K_LEFT]
@@ -36,18 +36,30 @@ maze_draw(WINDOW, MAP_GAME.map_print().replace('\n', ''))
 
 pygame.time.Clock().tick(25)
 # Game loop
+last_wait = True
 while MAP_GAME.status:
     for event in pygame.event.get():
         if event.type == QUIT:
             MAP_GAME.status = False
+            last_wait = False
 
         if event.type == KEYDOWN:
             if event.key in GAME_KEYS:
                 MAP_GAME.move_to(event.key)
 
             else:
+                MAP_GAME.status_message['status'] = MSG_QUIT
                 MAP_GAME.status = False
 
             set_header(WINDOW, MAP_GAME.status_message)
             # Draw maze
             maze_draw(WINDOW, MAP_GAME.map_print().replace('\n', ''))
+
+MAP_GAME.status_message['title'] = MSG_END
+set_header(WINDOW, MAP_GAME.status_message)
+pygame.display.flip()
+
+while last_wait:
+    for event in pygame.event.get():
+        if event.type == KEYDOWN:
+            last_wait = False

@@ -46,6 +46,8 @@ HEADER_MESSAGES = {
     'status': "Use arrow keys to play, any other key to quit.",
     'items': "Items: {}/{}",
 }
+MSG_END = "End of game, press a key to quit."
+MSG_QUIT = "You decide to quit the game"
 
 # Files
 BACKGROUND_IMG = 'img/zebra-800.png'
