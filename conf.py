@@ -5,6 +5,8 @@ Licence: `GNU GPL v3` GNU GPL v3: http://www.gnu.org/licenses/
 
 This file is part of [_ocp3_ project](https://github.com/freezed/ocp3)
 """
+import pygame
+import math
 
 # CONFIGURATION
 ELEMENT_LIST = [
@@ -30,6 +32,7 @@ MOVE_STATUS_MSG = {
 
 CELL_SIZE_PX = 30   # Size of the tiles, in pixels
 MAZE_SIZE_TIL = 15      # Size of a map, in tiles
+FONT_SIZE = math.floor(0.9 * CELL_SIZE_PX)
 BLACK = (0, 0, 0)
 BLUE = (0, 0, 128)
 GREEN = (0, 255, 0)
@@ -38,12 +41,22 @@ WHITE = (255, 255, 255)
 # Messages
 CAPTION = "OCP3, a pygame maze"
 ERR_MAP = "ERR_MAP: «{}»"
-MSG_START_GAME = "Welcome in OCP3.\nUse arrow keys to play, any other key to quit."
+HEADER_MESSAGES = {
+    'title': "Welcome in OCP3.",
+    'status': "Use arrow keys to play, any other key to quit.",
+    'items': "Items: {}/{}",
+}
 
 # Files
 BACKGROUND_IMG = 'img/zebra-800.png'
 MAP_FILE = '01.map'
 UNKNOWN_TILE = 'img/unknown-30.png'
+
+# Constant calculation
+HEADER_HEIGHT = (2 * CELL_SIZE_PX)
+WINDOW_SIZE_PX_W = CELL_SIZE_PX * MAZE_SIZE_TIL
+WINDOW_SIZE_PX_H = WINDOW_SIZE_PX_W + HEADER_HEIGHT
+WIN_DIM = (WINDOW_SIZE_PX_W, WINDOW_SIZE_PX_H)
 
 
 # FUNCTIONS
@@ -72,7 +85,6 @@ def elmt_val(kval, ksel, vsel, nline=False):
 
 def maze_draw(WINDOW, map_string):
     """ Take a map string and generate a graphic maze """
-    import pygame
     back_tiles = []
     for cell, element in enumerate(map_string):
         img = elmt_val('tile', 'symbol', element, 0)
@@ -83,8 +95,30 @@ def maze_draw(WINDOW, map_string):
             back_tiles.append(pygame.image.load(img).convert_alpha())
 
         x = (cell % MAZE_SIZE_TIL) * CELL_SIZE_PX
-        y = (cell // MAZE_SIZE_TIL) * CELL_SIZE_PX + (2 * CELL_SIZE_PX)
+        y = (cell // MAZE_SIZE_TIL) * CELL_SIZE_PX + HEADER_HEIGHT
         WINDOW.blit(back_tiles[cell], (x, y))
 
     # Refresh
     pygame.display.flip()
+
+
+def set_header(WINDOW, messages):
+    """
+    Set the header message on the window
+
+    :param obj WINDOWS: display object
+    :param list/str messages: list of messages per place
+    """
+    pygame.draw.rect(WINDOW, BLACK, (0, 0, WINDOW_SIZE_PX_W, HEADER_HEIGHT))
+
+    FONT = pygame.font.Font(None, FONT_SIZE)
+
+    h_title = FONT.render(str(messages['title']), True, BLUE, WHITE)
+    h_status = FONT.render(str(messages['status']), True, WHITE, BLACK)
+    h_items = FONT.render(str(messages['items']), True, GREEN, BLACK)
+
+    h_items_pos = h_items.get_rect(topright=(WINDOW_SIZE_PX_W, 0))
+
+    WINDOW.blit(h_title, (0, 0))
+    WINDOW.blit(h_status, (0, CELL_SIZE_PX))
+    WINDOW.blit(h_items, h_items_pos)

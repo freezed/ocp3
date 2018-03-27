@@ -11,43 +11,30 @@ See [README](https://github.com/freezed/ocp3/blob/master/README.md) for
 details
 """
 import pygame
-import math
 from pygame.locals import (
     K_UP, K_DOWN, K_RIGHT, K_LEFT, KEYDOWN, QUIT, RESIZABLE
 )
 from map import Map
-from conf import BACKGROUND_IMG, BLACK, BLUE, CAPTION, CELL_SIZE_PX, elmt_val, GREEN, MAP_FILE, maze_draw, MAZE_SIZE_TIL, WHITE
+from conf import BACKGROUND_IMG, CAPTION, MAP_FILE, HEADER_HEIGHT, maze_draw, set_header, WIN_DIM
 
 # Constant calculation
 GAME_KEYS = [K_UP, K_DOWN, K_RIGHT, K_LEFT]
-WINDOW_SIZE_PX_H = CELL_SIZE_PX * MAZE_SIZE_TIL
-WINDOW_SIZE_PX_V = WINDOW_SIZE_PX_H + (2 * CELL_SIZE_PX)
-WIN_DIM = (WINDOW_SIZE_PX_H, WINDOW_SIZE_PX_V)
-FONT_SIZE = math.floor(0.9 * CELL_SIZE_PX)
 
 pygame.init()
 WINDOW = pygame.display.set_mode(WIN_DIM, RESIZABLE)
 pygame.display.set_caption(CAPTION)
-WINDOW.blit(pygame.image.load(BACKGROUND_IMG).convert(), (0, (2 * CELL_SIZE_PX)))
+WINDOW.blit(pygame.image.load(BACKGROUND_IMG).convert(), (0, HEADER_HEIGHT))
 
 # Loading map
 MAP_GAME = Map(MAP_FILE)
 
 # Header messaging
-h_msg = MAP_GAME.status_message.splitlines()
-FONT = pygame.font.Font(None, FONT_SIZE)
-h1_txt = FONT.render(h_msg[0], True, WHITE, BLACK)
-h2_txt = FONT.render(h_msg[1], True, WHITE, BLACK)
-WINDOW.blit(h1_txt, (0, 0))
-WINDOW.blit(h2_txt, (0, CELL_SIZE_PX))
+set_header(WINDOW, MAP_GAME.status_message)
 
 # Draw maze
 maze_draw(WINDOW, MAP_GAME.map_print().replace('\n', ''))
 
-# system('clear')
-print(MAP_GAME.status_message)
-# MAP_GAME.map_print()
-
+pygame.time.Clock().tick(25)
 # Game loop
 while MAP_GAME.status:
     for event in pygame.event.get():
@@ -61,7 +48,6 @@ while MAP_GAME.status:
             else:
                 MAP_GAME.status = False
 
-            print("status_message:{}".format(MAP_GAME.status_message))
-
+            set_header(WINDOW, MAP_GAME.status_message)
             # Draw maze
             maze_draw(WINDOW, MAP_GAME.map_print().replace('\n', ''))

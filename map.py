@@ -8,7 +8,7 @@ This file is part of [_ocp3_ project](https://github.com/freezed/ocp3)
 import os
 import random
 from pygame.locals import K_UP, K_DOWN, K_RIGHT, K_LEFT
-from conf import elmt_val, ERR_MAP, MOVE_STATUS_MSG, MSG_START_GAME, MAZE_SIZE_TIL
+from conf import elmt_val, ERR_MAP, MOVE_STATUS_MSG, HEADER_MESSAGES, MAZE_SIZE_TIL
 
 
 class Map:
@@ -67,17 +67,22 @@ class Map:
                     self.place_element(symbol_to_place, pos=position)
 
                 self.status = True
-                self.status_message = MSG_START_GAME
                 self.collected_items = []
+                self.collected_items_num = 0
+                self.MAX_ITEMS = sum(1 for _ in elmt_val('name', 'collect', True))
+                self.status_message = {}
+                self.status_message['title'] = HEADER_MESSAGES['title']
+                self.status_message['status'] = HEADER_MESSAGES['status']
+                self.status_message['items'] = HEADER_MESSAGES['items'].format(self.collected_items_num, self.MAX_ITEMS)
 
             else:
                 self.status = False
-                self.status_message = ERR_MAP.format("maplines: " + str(len(map_in_a_list)))
+                print(ERR_MAP.format("maplines: " + str(len(map_in_a_list))))
 
         # Erreur de chargement du fichier
         else:
             self.status = False
-            self.status_message = ERR_MAP.format(':'.join(["mapfile", map_file]))
+            print(ERR_MAP.format(':'.join(["mapfile", map_file])))
 
     def map_print(self):
         """ Affiche la carte avec la position de jeu courante """
@@ -118,26 +123,28 @@ class Map:
 
             if next_char == elmt_val('symbol', 'name', 'void', 0):
                 self._player_position = next_position
-                self.status_message = MOVE_STATUS_MSG['ok']
+                self.status_message['status'] = MOVE_STATUS_MSG['ok']
 
             elif next_char in elmt_val('symbol', 'collect', True):
                 self._player_position = next_position
-                self.status_message = MOVE_STATUS_MSG['collect'].format(elmt_val('name', 'symbol', next_char, 0))
                 self._element_under_player = elmt_val('symbol', 'name', 'void', 0)
                 self.collected_items.append(elmt_val('name', 'symbol', next_char, 0))
+                self.collected_items_num += 1
+                self.status_message['status'] = MOVE_STATUS_MSG['collect'].format(elmt_val('name', 'symbol', next_char, 0))
+                self.status_message['items'] = HEADER_MESSAGES['items'].format(self.collected_items_num, self.MAX_ITEMS)
 
             elif next_char == elmt_val('symbol', 'name', 'exit', 0):
                 self.status = False
                 if sorted(self.collected_items) == sorted(elmt_val('name', 'collect', True)):
-                    self.status_message = MOVE_STATUS_MSG['winner']
+                    self.status_message['status'] = MOVE_STATUS_MSG['winner']
                 else:
                     missed_item_flist = ', '.join((item for item in elmt_val('name', 'collect', True) if item not in self.collected_items))
-                    self.status_message = MOVE_STATUS_MSG['looser'].format(missed_item_flist)
+                    self.status_message['status'] = MOVE_STATUS_MSG['looser'].format(missed_item_flist)
 
             else:  # wall, door or nline
-                self.status_message = MOVE_STATUS_MSG['wall']
+                self.status_message['status'] = MOVE_STATUS_MSG['wall']
         else:
-            self.status_message = MOVE_STATUS_MSG['wall']
+            self.status_message['status'] = MOVE_STATUS_MSG['wall']
 
         # place le plyr sur sa nouvelle position
         self.place_element(elmt_val('symbol', 'name', 'player', 0))
