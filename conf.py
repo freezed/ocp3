@@ -30,8 +30,13 @@ MOVE_STATUS_MSG = {
 
 CELL_SIZE_PX = 30   # Size of the tiles, in pixels
 MAZE_SIZE_TIL = 15      # Size of a map, in tiles
+BLACK = (0, 0, 0)
+BLUE = (0, 0, 128)
+GREEN = (0, 255, 0)
+WHITE = (255, 255, 255)
 
 # Messages
+CAPTION = "OCP3, a pygame maze"
 ERR_MAP = "ERR_MAP: «{}»"
 MSG_START_GAME = "Welcome in OCP3.\nUse arrow keys to play, any other key to quit."
 
@@ -78,7 +83,7 @@ def maze_draw(WINDOW, map_string):
             back_tiles.append(pygame.image.load(img).convert_alpha())
 
         x = (cell % MAZE_SIZE_TIL) * CELL_SIZE_PX
-        y = (cell // MAZE_SIZE_TIL) * CELL_SIZE_PX + CELL_SIZE_PX
+        y = (cell // MAZE_SIZE_TIL) * CELL_SIZE_PX + (2 * CELL_SIZE_PX)
         WINDOW.blit(back_tiles[cell], (x, y))
 
     # Refresh
