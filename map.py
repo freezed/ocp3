@@ -41,62 +41,8 @@ class Map:
         # Loading map file
         if os.path.isfile(map_file) is True:
             with open(map_file, "r") as map_data:
+                self.check_file(map_data.read().splitlines())
 
-                # Translate to a splited lines string list
-                map_in_a_list = map_data.read().splitlines()
-
-            # Map line number
-            if len(map_in_a_list) == MAZE_SIZE:
-                self._COLUM = MAZE_SIZE + 1
-                self._LINES = MAZE_SIZE
-                self._MAXIM = (self._COLUM * self._LINES) - 1
-
-                # ++ Add other map checks here ++
-
-                # Constructing square map
-                map_in_a_list = [self.check_line(line)
-                                 for line in map_in_a_list]
-                self._map_in_a_string = '\n'.join(map_in_a_list)
-
-                # Player's initial position
-                self._player_position = self._map_in_a_string.find(
-                    elmt_val('symbol', 'name', 'player', 0)
-                )
-
-                # Element under player at start
-                self._element_under_player = elmt_val(
-                    'symbol', 'name', 'void', 0
-                )
-
-                # Place collectables on the map
-                for symbol_to_place in elmt_val('symbol', 'collect', True):
-                    position = random.choice(
-                        [idx for (idx, value) in enumerate(
-                            self._map_in_a_string
-                        ) if value == elmt_val(
-                            'symbol', 'name', 'void', 0
-                        )])
-                    self.place_element(symbol_to_place, pos=position)
-
-                self.status = True
-                self.collected_items = []
-                self.collected_items_num = 0
-                self.MAX_ITEMS = sum(
-                    1 for _ in elmt_val('name', 'collect', True)
-                )
-                self.status_message = {}
-                self.status_message['title'] = HEAD_MESSAGES['title']
-                self.status_message['status'] = HEAD_MESSAGES['status']
-                self.status_message['items'] \
-                    = HEAD_MESSAGES['items'].format(
-                        self.collected_items_num, self.MAX_ITEMS
-                    )
-
-            else:
-                self.status = False
-                print(ERR_MAP.format("maplines: " + str(len(map_in_a_list))))
-
-        # File error
         else:
             self.status = False
             print(ERR_MAP.format(':'.join(["mapfile", map_file])))
@@ -204,6 +150,62 @@ class Map:
             txt = self._map_in_a_string
 
         self._map_in_a_string = txt[:pos] + element + txt[pos + 1:]
+
+    def check_file(self, map_string):
+        """
+        Checks the map conformity before starting the game
+
+        :param list/str map_string: One mazes line on each index
+        """
+        # Map line number
+        if len(map_string) == MAZE_SIZE:
+            self._COLUM = MAZE_SIZE + 1
+            self._LINES = MAZE_SIZE
+            self._MAXIM = (self._COLUM * self._LINES) - 1
+
+            # ++ Add other map checks here ++
+
+            # Constructing square map
+            map_string = [self.check_line(line) for line in map_string]
+            self._map_in_a_string = '\n'.join(map_string)
+
+            # Player's initial position
+            self._player_position = self._map_in_a_string.find(
+                elmt_val('symbol', 'name', 'player', 0)
+            )
+
+            # Element under player at start
+            self._element_under_player = elmt_val(
+                'symbol', 'name', 'void', 0
+            )
+
+            # Place collectables on the map
+            for symbol_to_place in elmt_val('symbol', 'collect', True):
+                position = random.choice(
+                    [idx for (idx, value) in enumerate(
+                        self._map_in_a_string
+                    ) if value == elmt_val(
+                        'symbol', 'name', 'void', 0
+                    )])
+                self.place_element(symbol_to_place, pos=position)
+
+            self.status = True
+            self.collected_items = []
+            self.collected_items_num = 0
+            self.MAX_ITEMS = sum(
+                1 for _ in elmt_val('name', 'collect', True)
+            )
+            self.status_message = {}
+            self.status_message['title'] = HEAD_MESSAGES['title']
+            self.status_message['status'] = HEAD_MESSAGES['status']
+            self.status_message['items'] \
+                = HEAD_MESSAGES['items'].format(
+                    self.collected_items_num, self.MAX_ITEMS
+                )
+
+        else:
+            self.status = False
+            print(ERR_MAP.format("maplines: " + str(len(map_string))))
 
     @staticmethod
     def check_line(line):
