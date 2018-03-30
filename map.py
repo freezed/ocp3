@@ -8,7 +8,10 @@ This file is part of [_ocp3_ project](https://github.com/freezed/ocp3)
 import os
 import random
 from pygame.locals import K_UP, K_DOWN, K_RIGHT, K_LEFT
-from conf import elmt_val, ERR_MAP, MOVE_STATUS_MSG, HEADER_MESSAGES, MAZE_SIZE_TIL
+from conf import (
+    elmt_val, ERR_MAP, MSG_COLLECT, MSG_LOSER, MSG_OK,
+    MSG_WALL, MSG_WINNER, HEAD_MESSAGES, MAZE_SIZE
+)
 
 
 class Map:
@@ -35,22 +38,24 @@ class Map:
         :rtype map: str()
         :return: None
         """
-        # Chargement du fichier carte choisi
+        # Loading map file
         if os.path.isfile(map_file) is True:
             with open(map_file, "r") as map_data:
 
-                # translate to a splited lines string list
+                # Translate to a splited lines string list
                 map_in_a_list = map_data.read().splitlines()
 
-            # map line number
-            if len(map_in_a_list) == MAZE_SIZE_TIL:
-                self._COLUM = MAZE_SIZE_TIL + 1
-                self._LINES = MAZE_SIZE_TIL
+            # Map line number
+            if len(map_in_a_list) == MAZE_SIZE:
+                self._COLUM = MAZE_SIZE + 1
+                self._LINES = MAZE_SIZE
                 self._MAXIM = (self._COLUM * self._LINES) - 1
-                # Add map checking here
+
+                # ++ Add other map checks here ++
 
                 # Constructing square map
-                map_in_a_list = [self.check_line(line) for line in map_in_a_list]
+                map_in_a_list = [self.check_line(line)
+                                 for line in map_in_a_list]
                 self._map_in_a_string = '\n'.join(map_in_a_list)
 
                 # Player's initial position
@@ -59,44 +64,54 @@ class Map:
                 )
 
                 # Element under player at start
-                self._element_under_player = elmt_val('symbol', 'name', 'void', 0)
+                self._element_under_player = elmt_val(
+                    'symbol', 'name', 'void', 0
+                )
 
                 # Place collectables on the map
                 for symbol_to_place in elmt_val('symbol', 'collect', True):
-                    position = random.choice([idx for (idx, value) in enumerate(self._map_in_a_string) if value == elmt_val('symbol', 'name', 'void', 0)])
+                    position = random.choice(
+                        [idx for (idx, value) in enumerate(
+                            self._map_in_a_string
+                        ) if value == elmt_val(
+                            'symbol', 'name', 'void', 0
+                        )])
                     self.place_element(symbol_to_place, pos=position)
 
                 self.status = True
                 self.collected_items = []
                 self.collected_items_num = 0
-                self.MAX_ITEMS = sum(1 for _ in elmt_val('name', 'collect', True))
+                self.MAX_ITEMS = sum(
+                    1 for _ in elmt_val('name', 'collect', True)
+                )
                 self.status_message = {}
-                self.status_message['title'] = HEADER_MESSAGES['title']
-                self.status_message['status'] = HEADER_MESSAGES['status']
-                self.status_message['items'] = HEADER_MESSAGES['items'].format(self.collected_items_num, self.MAX_ITEMS)
+                self.status_message['title'] = HEAD_MESSAGES['title']
+                self.status_message['status'] = HEAD_MESSAGES['status']
+                self.status_message['items'] \
+                    = HEAD_MESSAGES['items'].format(
+                        self.collected_items_num, self.MAX_ITEMS
+                    )
 
             else:
                 self.status = False
                 print(ERR_MAP.format("maplines: " + str(len(map_in_a_list))))
 
-        # Erreur de chargement du fichier
+        # File error
         else:
             self.status = False
             print(ERR_MAP.format(':'.join(["mapfile", map_file])))
 
     def map_print(self):
-        """ Affiche la carte avec la position de jeu courante """
+        """ Return a string of the map state """
         return self._map_in_a_string
 
     def move_to(self, pressed_key):
         """
-        Deplace le plyr sur la carte
+        Move the player on the map
 
-        :param str pressed_key: mouvement souhaite
-        :return int: une cle de la constante MOVE_STATUS
+        :param str pressed_key: direction (pygame const)
         """
-        # supprime le plyr de son emplacement actuel et on replace
-        # l'elements «dessous»
+        # Replace player on the map by the under-element
         self._map_in_a_string = self._map_in_a_string.replace(
             elmt_val('symbol', 'name', 'player', 0),
             self._element_under_player
@@ -115,50 +130,66 @@ class Map:
         elif pressed_key == K_LEFT:
             next_position = self._player_position - 1
 
+        # TODO nove instruction to __init__
         self._element_under_player = elmt_val('symbol', 'name', 'void', 0)
 
-        # Traitement en fonction de la case du prochain pas
+        # Next position treatment
         if next_position >= 0 and next_position <= self._MAXIM:
             next_char = self._map_in_a_string[next_position]
 
             if next_char == elmt_val('symbol', 'name', 'void', 0):
                 self._player_position = next_position
-                self.status_message['status'] = MOVE_STATUS_MSG['ok']
+                self.status_message['status'] = MSG_OK
 
             elif next_char in elmt_val('symbol', 'collect', True):
                 self._player_position = next_position
-                self._element_under_player = elmt_val('symbol', 'name', 'void', 0)
-                self.collected_items.append(elmt_val('name', 'symbol', next_char, 0))
+                self._element_under_player = elmt_val(
+                    'symbol', 'name', 'void', 0
+                )
+                self.collected_items.append(
+                    elmt_val('name', 'symbol', next_char, 0)
+                )
                 self.collected_items_num += 1
-                self.status_message['status'] = MOVE_STATUS_MSG['collect'].format(elmt_val('name', 'symbol', next_char, 0))
-                self.status_message['items'] = HEADER_MESSAGES['items'].format(self.collected_items_num, self.MAX_ITEMS)
+                self.status_message['status'] = MSG_COLLECT.format(
+                    elmt_val('name', 'symbol', next_char, 0)
+                )
+                self.status_message['items'] \
+                    = HEAD_MESSAGES['items'].format(
+                        self.collected_items_num, self.MAX_ITEMS
+                    )
 
             elif next_char == elmt_val('symbol', 'name', 'exit', 0):
                 self.status = False
-                if sorted(self.collected_items) == sorted(elmt_val('name', 'collect', True)):
-                    self.status_message['status'] = MOVE_STATUS_MSG['winner']
+                if sorted(self.collected_items) == sorted(
+                        elmt_val('name', 'collect', True)
+                ):
+                    self.status_message['status'] = MSG_WINNER
                 else:
-                    missed_item_flist = ', '.join((item for item in elmt_val('name', 'collect', True) if item not in self.collected_items))
-                    self.status_message['status'] = MOVE_STATUS_MSG['looser'].format(missed_item_flist)
+                    missed_item_flist = ', '.join(
+                        (item for item in elmt_val(
+                            'name', 'collect', True
+                        ) if item not in self.collected_items)
+                    )
+                    self.status_message['status'] = MSG_LOSER.format(
+                        missed_item_flist
+                    )
 
-            else:  # wall, door or nline
-                self.status_message['status'] = MOVE_STATUS_MSG['wall']
+            else:  # wall or nline
+                self.status_message['status'] = MSG_WALL
         else:
-            self.status_message['status'] = MOVE_STATUS_MSG['wall']
+            self.status_message['status'] = MSG_WALL
 
-        # place le plyr sur sa nouvelle position
+        # Set the player on position
         self.place_element(elmt_val('symbol', 'name', 'player', 0))
 
     def place_element(self, element, **kwargs):
         """
-        Place l'element sur la carte.
+        Set an element on the map
 
-        La position est celle de l'attribut self._player_position au
-        moment de l'appel.
+        The position used is in ._player_position attribute
+        Used for player and void after collecting items
 
-        Utilise pour place le plyrt et remettre les portes.
-
-        :param str element: element a placer sur la carte
+        :param str element: the string of the element to place
         """
         # FIXME cannot find a way to define default value to the
         # method's arguments with class attributes
@@ -177,12 +208,12 @@ class Map:
     @staticmethod
     def check_line(line):
         """
-        Checks if a line has a good length, fill it if it's too small,
-        truncate if it's too long
+        Checks if a line has a good length (configured in MAZE_SIZE const).
+        Fill it if it's too small, truncate if it's too long.
         """
-        differance = MAZE_SIZE_TIL - len(str(line))
+        differance = MAZE_SIZE - len(str(line))
         if differance < 0:
-            return line[:MAZE_SIZE_TIL]
+            return line[:MAZE_SIZE]
         elif differance > 0:
             return line + (differance * elmt_val('symbol', 'name', 'void', 0))
         else:
