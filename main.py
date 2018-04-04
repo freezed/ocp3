@@ -23,16 +23,17 @@ from conf import (
 GAME_KEYS = [K_UP, K_DOWN, K_RIGHT, K_LEFT]
 last_wait = False
 
-pygame.init()
-WINDOW = pygame.display.set_mode(WIN_DIM)
-pygame.display.set_caption(CAPTION)
-WINDOW.blit(pygame.image.load(BACKGRND_FILE).convert(), (0, HEAD_SIZE_H))
-
 # Loading map
 MAP_GAME = Map(MAP_FILE)
 
+if MAP_GAME.status:
+    pygame.init()
+    pygame.time.Clock().tick(25)
+    WINDOW = pygame.display.set_mode(WIN_DIM)
+    pygame.display.set_caption(CAPTION)
+    WINDOW.blit(pygame.image.load(BACKGRND_FILE).convert(), (0, HEAD_SIZE_H))
+
 # Game loop
-pygame.time.Clock().tick(25)
 while MAP_GAME.status:
     last_wait = True
     set_header(WINDOW, MAP_GAME.status_message)
