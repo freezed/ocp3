@@ -21,7 +21,7 @@ from conf import (
 )
 
 GAME_KEYS = [K_UP, K_DOWN, K_RIGHT, K_LEFT]
-last_message = False  # Do not execute last_message loop
+last_message = False  # Do not execute last message loop
 
 # Loading map
 MAP_GAME = Map(MAP_FILE)
@@ -35,7 +35,6 @@ if MAP_GAME.status:
 
 # Game loop
 while MAP_GAME.status:
-    last_wait = True
     set_header(WINDOW, MAP_GAME.status_message)
     maze_draw(WINDOW, MAP_GAME.map_print())
     for event in pygame.event.get():
@@ -44,6 +43,7 @@ while MAP_GAME.status:
             last_message = False
 
         if event.type == KEYDOWN:
+            last_message = True  # Execute last_message loop
             if event.key in GAME_KEYS:
                 MAP_GAME.move_to(event.key)
 
@@ -58,4 +58,4 @@ while last_message:
     pygame.display.flip()
     for event in pygame.event.get():
         if event.type == KEYDOWN:
-            last_wait = False
+            last_message = False
