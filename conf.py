@@ -9,38 +9,22 @@ from math import floor
 import pygame
 
 ELEMENTS = (
-    {
-        'symbol': 'n', 'name': 'needle', 'cross': True,
-        'ressurect': False, 'collect': True, 'tile': 'img/3-30.png'
-    },
-    {
-        'symbol': 't', 'name': 'tube', 'cross': True,
-        'ressurect': False, 'collect': True, 'tile': 'img/1-30.png'
-    },
-    {
-        'symbol': 'e', 'name': 'ether', 'cross': True,
-        'ressurect': False, 'collect': True, 'tile': 'img/2-30.png'
-    },
-    {
-        'symbol': 'E', 'name': 'exit', 'cross': False,
-        'ressurect': False, 'collect': False, 'tile': 'img/g-30.png'
-    },
-    {
-        'symbol': ' ', 'name': 'void', 'cross': True,
-        'ressurect': True, 'collect': False, 'tile': 'img/void-30.png'
-    },
-    {
-        'symbol': '.', 'name': 'wall', 'cross': False,
-        'ressurect': False, 'collect': False, 'tile': 'img/wall-30.png'
-    },
-    {
-        'symbol': 'X', 'name': 'player', 'cross': False,
-        'ressurect': False, 'collect': False, 'tile': 'img/player-30.png'
-    },
-    {
-        'symbol': '\n', 'name': 'nlin', 'cross': False,
-        'ressurect': False, 'collect': False, 'tile': False
-    },
+    {'symbol': 'n', 'name': 'needle', 'cross': True, 'item': True,
+     'tile': 'img/3-30.png'},
+    {'symbol': 't', 'name': 'tube', 'cross': True, 'item': True,
+     'tile': 'img/1-30.png'},
+    {'symbol': 'e', 'name': 'ether', 'cross': True, 'item': True,
+     'tile': 'img/2-30.png'},
+    {'symbol': 'E', 'name': 'exit', 'cross': False, 'item': False,
+     'tile': 'img/g-30.png'},
+    {'symbol': ' ', 'name': 'void', 'cross': True, 'item': False,
+     'tile': 'img/void-30.png'},
+    {'symbol': '.', 'name': 'wall', 'cross': False, 'item': False,
+     'tile': 'img/wall-30.png'},
+    {'symbol': 'X', 'name': 'player', 'cross': False, 'item': False,
+     'tile': 'img/player-30.png'},
+    {'symbol': '\n', 'name': 'nlin', 'cross': False, 'item': False,
+     'tile': False},
 )
 
 CELL_SIZE = 30   # Size of the tiles, in pixels
