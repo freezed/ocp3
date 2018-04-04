@@ -44,7 +44,7 @@ ELEMENTS = (
 )
 
 CELL_SIZE = 30   # Size of the tiles, in pixels
-MAZE_SIZE = 15   # Size of a map, in tiles
+MAZE_SIZE = 15   # Size of a maze, in tiles
 BLACK = (0, 0, 0)
 BLUE = (0, 0, 128)
 GREEN = (0, 255, 0)
@@ -52,8 +52,8 @@ WHITE = (255, 255, 255)
 
 # Messages
 CAPTION = "OCP3, a maze based on pygame"
-ERR_FILE = "Map filename is not avaiable:  «{}»"
-ERR_LINE = "Map file has wrong lines number:  «{}»"
+ERR_FILE = "Maze filename is not avaiable:  «{}»"
+ERR_LINE = "Maze file has wrong lines number:  «{}»"
 HEAD_MESSAGES = {
     'title': "Welcome in OCP3.",
     'status': "Use arrow keys to play, any other key to quit.",
@@ -69,7 +69,7 @@ MSG_WINNER = "Cogratulations! You asleep the guard."
 
 # Files
 BACKGRND_FILE = 'img/back-800.png'
-MAP_FILE = '01.map'
+MAZE_FILE = '01.maze'
 UNKNOWN_FILE = 'img/unknown-30.png'
 
 # Constant calculation
@@ -105,15 +105,15 @@ def elmt_val(kval, ksel, vsel, nline=False):
         return False
 
 
-def maze_draw(surface, map_string):
+def maze_draw(surface, maze_string):
     """
-    Take a map string and generate a graphic maze
+    Take a maze string and generate a graphic maze
 
     :param obj surface: a pygame surface object
-    :param str map_string: map modelized in a string
+    :param str maze_string: maze modelized in a string
     """
     back_tiles = []
-    for cell, element in enumerate(map_string):
+    for cell, element in enumerate(maze_string):
         img = elmt_val('tile', 'symbol', element, 0)
 
         if img is False:

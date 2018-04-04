@@ -36,10 +36,10 @@ Feel free to contribute, I do not use other OS
 
 * `main.py`, main script the one to run
 * `conf.py`, place for variables, constants and fuctions
-* `map.py`, map class
+* `maze.py`, maze class
 * `README.md`, you're reading it!
 * `requirement.txt`, dependences for feeding pip
-* `01.map`, file of the map
+* `01.maze`, file of the maze
 * `img/`, place for images (tiles) files
 
 ### Features
@@ -58,7 +58,7 @@ the exit from the maze. If he stupid enough to comes in front of the the
 guard without all the objects, he dies (according to the evolution theory).
 * The program will be standalone, i. e. it can be run on any computer.
 
-### Roadmap
+### Roadmaze
 
 1. Create the starting frame
     * [x] Initialize a Git repo on Github

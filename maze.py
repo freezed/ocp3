@@ -14,59 +14,59 @@ from conf import (
 )
 
 
-class Map:
+class Maze:
     """
-    Provides a usable map from a text file
-    Checks the map compatibility
+    Provides a usable maze from a text file
+    Checks the maze compatibility
     Moves the player to it
     """
 
-    def __init__(self, map_file):
+    def __init__(self, maze_file):
         """
-        Initialise map
+        Initialise maze
 
-        The Map object has given attributes:
+        The Maze object has given attributes:
 
         :var int status: move status (what append after a move command)
         :var str status_message: feedback message for player
-        :var lst splited_map: splited map in a list
-        :var str _map_in_a_string: map string
+        :var lst splited_maze: splited maze in a list
+        :var str _maze_in_a_string: maze string
         :var str _element_under_player: Element under player
-        :var int _player_position: Player index in _map_in_a_string
+        :var int _player_position: Player index in _maze_in_a_string
 
-        :param map_file: map filename
-        :rtype map: str()
+        :param maze_file: maze filename
+        :rtype maze: str()
         :return: None
         """
-        # Loading map file
-        if os.path.isfile(map_file) is False:
+        # Loading maze file
+        if os.path.isfile(maze_file) is False:
             self.status = False
-            print(ERR_FILE.format(map_file))
+            print(ERR_FILE.format(maze_file))
 
         else:
-            with open(map_file, "r") as map_data:
-                splited_map = map_data.read().splitlines()
+            with open(maze_file, "r") as maze_data:
+                splited_maze = maze_data.read().splitlines()
 
-            if self.check_file(splited_map):
+            if self.check_file(splited_maze):
 
-                # Builds a square map (if end-line spaces are missing in the file)
-                self._map_in_a_string = '\n'.join(
-                    (self.check_line(line) for line in splited_map)
+                # Builds a square maze (if end-line spaces are missing in the file)
+                self._maze_in_a_string = '\n'.join(
+                    (self.check_line(line) for line in splited_maze)
                 )
 
                 # Gets player initial position
-                self._player_position = self._map_in_a_string.find(
+                self._player_position = self._maze_in_a_string.find(
                     elmt_val('symbol', 'name', 'player', 0)
                 )
 
                 # Defines Element under player at start
                 self._element_under_player = elmt_val('symbol', 'name', 'void', 0)
 
-                # Place collectables on the map
+                # Place collectables on the maze
                 for symbol_to_place in elmt_val('symbol', 'collect', True):
                     position = random.choice(
                         [idx for (idx, value) in enumerate(
-                            self._map_in_a_string
+                            self._maze_in_a_string
                         ) if value == elmt_val(
                             'symbol', 'name', 'void', 0
                         )])
@@ -91,32 +91,32 @@ class Map:
                 self.status = False
 
     @staticmethod
-    def check_file(splited_map):
+    def check_file(splited_maze):
         """
-        Checks the map conformity before starting the game
+        Checks the maze conformity before starting the game
 
-        :param list/str splited_map: Map splited in a list (line = index)
+        :param list/str splited_maze: Maze splited in a list (line = index)
         """
-        if len(splited_map) != MAZE_SIZE:
-            print(ERR_LINE.format(len(splited_map)))
+        if len(splited_maze) != MAZE_SIZE:
+            print(ERR_LINE.format(len(splited_maze)))
             return False
 
         # ++Add other checks here: elements inside, exit possible, etc++
         else:
             return True
 
-    def map_print(self):
-        """ Return a string of the map state """
-        return self._map_in_a_string.replace('\n', '')
+    def maze_print(self):
+        """ Return a string of the maze state """
+        return self._maze_in_a_string.replace('\n', '')
 
     def move_to(self, pressed_key):
         """
-        Move the player on the map
+        Move the player on the maze
 
         :param str pressed_key: direction (pygame const)
         """
-        # Replace player on the map by the under-element
-        self._map_in_a_string = self._map_in_a_string.replace(
+        # Replace player on the maze by the under-element
+        self._maze_in_a_string = self._maze_in_a_string.replace(
             elmt_val('symbol', 'name', 'player', 0),
             self._element_under_player
         )
@@ -136,7 +136,7 @@ class Map:
 
         # Next position treatment
         if next_position >= 0 and next_position <= self._MAXIM:
-            next_char = self._map_in_a_string[next_position]
+            next_char = self._maze_in_a_string[next_position]
 
             if next_char == elmt_val('symbol', 'name', 'void', 0):
                 self._player_position = next_position
@@ -185,7 +185,7 @@ class Map:
 
     def place_element(self, element, **kwargs):
         """
-        Set an element on the map
+        Set an element on the maze
 
         The position used is in ._player_position attribute
         Used for player and void after collecting items
@@ -202,9 +202,9 @@ class Map:
         if 'txt' in kwargs:
             txt = kwargs['txt']
         else:
-            txt = self._map_in_a_string
+            txt = self._maze_in_a_string
 
-        self._map_in_a_string = txt[:pos] + element + txt[pos + 1:]
+        self._maze_in_a_string = txt[:pos] + element + txt[pos + 1:]
 
     @staticmethod
     def check_line(line):
