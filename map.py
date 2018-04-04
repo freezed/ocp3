@@ -107,7 +107,7 @@ class Map:
 
     def map_print(self):
         """ Return a string of the map state """
-        return self._map_in_a_string
+        return self._map_in_a_string.replace('\n', '')
 
     def move_to(self, pressed_key):
         """
