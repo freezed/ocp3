@@ -52,7 +52,8 @@ WHITE = (255, 255, 255)
 
 # Messages
 CAPTION = "OCP3, a maze based on pygame"
-ERR_MAP = "ERR_MAP: «{}»"
+ERR_FILE = "Map filename is not avaiable:  «{}»"
+ERR_LINE = "Map file has wrong lines number:  «{}»"
 HEAD_MESSAGES = {
     'title': "Welcome in OCP3.",
     'status': "Use arrow keys to play, any other key to quit.",

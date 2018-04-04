@@ -21,6 +21,7 @@ from conf import (
 )
 
 GAME_KEYS = [K_UP, K_DOWN, K_RIGHT, K_LEFT]
+last_wait = False
 
 pygame.init()
 WINDOW = pygame.display.set_mode(WIN_DIM)
@@ -29,13 +30,13 @@ WINDOW.blit(pygame.image.load(BACKGRND_FILE).convert(), (0, HEAD_SIZE_H))
 
 # Loading map
 MAP_GAME = Map(MAP_FILE)
-set_header(WINDOW, MAP_GAME.status_message)
-maze_draw(WINDOW, MAP_GAME.map_print().replace('\n', ''))
 
 # Game loop
-# pygame.time.Clock().tick(25)
-last_wait = True
+pygame.time.Clock().tick(25)
 while MAP_GAME.status:
+    last_wait = True
+    set_header(WINDOW, MAP_GAME.status_message)
+    maze_draw(WINDOW, MAP_GAME.map_print().replace('\n', ''))
     for event in pygame.event.get():
         if event.type == QUIT:
             MAP_GAME.status = False
@@ -53,12 +54,12 @@ while MAP_GAME.status:
             # Draw maze
             maze_draw(WINDOW, MAP_GAME.map_print().replace('\n', ''))
 
-MAP_GAME.status_message['title'] = MSG_END
-set_header(WINDOW, MAP_GAME.status_message)
-pygame.display.flip()
 
 # Loop for last messag before exit
 while last_wait:
+    MAP_GAME.status_message['title'] = MSG_END
+    set_header(WINDOW, MAP_GAME.status_message)
+    pygame.display.flip()
     for event in pygame.event.get():
         if event.type == KEYDOWN:
             last_wait = False
