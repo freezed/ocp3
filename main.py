@@ -29,8 +29,8 @@ MAP_GAME = Map(MAP_FILE)
 if MAP_GAME.status:
     pygame.init()
     pygame.time.Clock().tick(25)
-    WINDOW = pygame.display.set_mode(WIN_DIM)
     pygame.display.set_caption(CAPTION)
+    WINDOW = pygame.display.set_mode(WIN_DIM)
     WINDOW.blit(pygame.image.load(BACKGRND_FILE).convert(), (0, HEAD_SIZE_H))
 
 # Game loop
@@ -51,12 +51,8 @@ while MAP_GAME.status:
                 MAP_GAME.status_message['status'] = MSG_QUIT
                 MAP_GAME.status = False
 
-            set_header(WINDOW, MAP_GAME.status_message)
-            # Draw maze
-            maze_draw(WINDOW, MAP_GAME.map_print().replace('\n', ''))
 
-
-# Loop for last messag before exit
+# Loop for last message before exit
 while last_wait:
     MAP_GAME.status_message['title'] = MSG_END
     set_header(WINDOW, MAP_GAME.status_message)
