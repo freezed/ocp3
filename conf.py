@@ -10,19 +10,19 @@ import pygame
 
 ELEMENTS = (
     {'symbol': 'n', 'name': 'needle', 'cross': True, 'item': True,
-     'tile': 'img/3-30.png'},
+     'tile': 'img/needle.png'},
     {'symbol': 't', 'name': 'tube', 'cross': True, 'item': True,
-     'tile': 'img/1-30.png'},
+     'tile': 'img/rod.png'},
     {'symbol': 'e', 'name': 'ether', 'cross': True, 'item': True,
-     'tile': 'img/2-30.png'},
+     'tile': 'img/ether.png'},
     {'symbol': 'E', 'name': 'exit', 'cross': False, 'item': False,
-     'tile': 'img/g-30.png'},
+     'tile': 'img/guardian.png'},
     {'symbol': ' ', 'name': 'void', 'cross': True, 'item': False,
-     'tile': 'img/void-30.png'},
+     'tile': 'img/floor1.png'},
     {'symbol': '.', 'name': 'wall', 'cross': False, 'item': False,
-     'tile': 'img/wall-30.png'},
+     'tile': 'img/wall.png'},
     {'symbol': 'X', 'name': 'player', 'cross': False, 'item': False,
-     'tile': 'img/player-30.png'},
+     'tile': 'img/macgyver.png'},
     {'symbol': '\n', 'name': 'nlin', 'cross': False, 'item': False,
      'tile': False},
 )
@@ -52,7 +52,6 @@ MSG_WALL = "That's a wall!"
 MSG_WINNER = "Cogratulations! You asleep the guard."
 
 # Files
-BACKGRND_FILE = 'img/back-800.png'
 MAZE_FILE = '01.maze'
 UNKNOWN_FILE = 'img/unknown-30.png'
 
@@ -64,7 +63,7 @@ WIN_SIZE_H = WIN_SIZE_W + HEAD_SIZE_H
 WIN_DIM = (WIN_SIZE_W, WIN_SIZE_H)
 
 
-# FUNCTIONS
+# FUNCTION
 
 
 def elmt_val(kval, ksel, vsel, nline=False):
