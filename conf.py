@@ -74,8 +74,8 @@ def elmt_val(kval, ksel, vsel, nline=False):
     :param str kval: key of the value returned
     :param str ksel: key of the selection criteria
     :param str vsel: value of the selection criteria
-    :param bool/int nline: Default False, return value(s) in a list,
-    use a int() to return the `n` value from the list
+    :param bool/int nline: Default False, return value(s) in a generator,
+    use a int() to return the `n` value from a list
 
     """
     try:
@@ -87,49 +87,3 @@ def elmt_val(kval, ksel, vsel, nline=False):
                     if element[ksel] == vsel][nline]
     except IndexError:
         return False
-
-
-def maze_draw(surface, maze_string):
-    """
-    Take a maze string and generate a graphic maze
-
-    :param obj surface: a pygame surface object
-    :param str maze_string: maze modelized in a string
-    """
-    back_tiles = []
-    for cell, element in enumerate(maze_string):
-        img = elmt_val('tile', 'symbol', element, 0)
-
-        if img is False:
-            back_tiles.append(pygame.image.load(UNKNOWN_FILE).convert())
-        else:
-            back_tiles.append(pygame.image.load(img).convert_alpha())
-
-        x = (cell % MAZE_SIZE) * CELL_SIZE
-        y = (cell // MAZE_SIZE) * CELL_SIZE + HEAD_SIZE_H
-        surface.blit(back_tiles[cell], (x, y))
-
-    # Refresh
-    pygame.display.flip()
-
-
-def set_header(surface, messages):
-    """
-    Set the header message on the window
-
-    :param obj surface: surface surfaceect
-    :param list/str messages: list of messages per place
-    """
-    pygame.draw.rect(surface, BLACK, (0, 0, WIN_SIZE_W, HEAD_SIZE_H))
-
-    FONT = pygame.font.Font(None, FONT_SIZE)
-
-    h_title = FONT.render(messages['title'], True, BLUE, WHITE)
-    h_status = FONT.render(messages['status'], True, WHITE, BLACK)
-    h_items = FONT.render(messages['items'], True, GREEN, BLACK)
-
-    h_items_pos = h_items.get_rect(topright=(WIN_SIZE_W, 0))
-
-    surface.blit(h_title, (0, 0))
-    surface.blit(h_status, (0, CELL_SIZE))
-    surface.blit(h_items, h_items_pos)

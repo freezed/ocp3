@@ -5,7 +5,10 @@ Licence: `GNU GPL v3` GNU GPL v3: http://www.gnu.org/licenses/
 
 This file is part of [_ocp3_ project](https://github.com/freezed/ocp3)
 """
-from conf import elmt_val, MSG_COLLECT, MSG_LOSER, MSG_OK, MSG_WALL, MSG_WINNER, HEAD_MESSAGES
+from conf import (
+    elmt_val, MSG_COLLECT, MSG_LOSER, MSG_OK, MSG_WALL, MSG_WINNER,
+    HEAD_MESSAGES
+)
 from pygame.locals import K_UP, K_DOWN, K_RIGHT, K_LEFT
 
 
@@ -17,7 +20,9 @@ class Player:
     def __init__(self, maze):
         """ Constructor """
         self.maze = maze
-        self.position = maze.string.find(elmt_val('symbol', 'name', 'player', 0))
+        self.position = maze.string.find(
+            elmt_val('symbol', 'name', 'player', 0)
+        )
         # Element under player, default 'void'
         self.ground = elmt_val('symbol', 'name', 'void', 0)
 
@@ -58,7 +63,8 @@ class Player:
         """
         Next position treatment
 
-        For each movement, it checks the next symbol on the maze and apply the corresponding rule:
+        For each movement, it checks the next symbol on the maze and
+        apply the corresponding rule:
         - set the new position
         - updates messages
         - collect item (if any)
@@ -97,7 +103,8 @@ class Player:
                 self.maze.status = False
 
                 # all 'item' are collected : player wins
-                if sorted(self.stock) == sorted(elmt_val('name', 'item', True)):
+                if sorted(self.stock) == sorted(
+                        elmt_val('name', 'item', True)):
                     self.status_message['status'] = MSG_WINNER
 
                 # player lose
@@ -117,4 +124,6 @@ class Player:
             self.status_message['status'] = MSG_WALL
 
         # Sets the player's new position
-        self.maze.set_symbol(elmt_val('symbol', 'name', 'player', 0), self.position)
+        self.maze.set_symbol(
+            elmt_val('symbol', 'name', 'player', 0), self.position
+        )

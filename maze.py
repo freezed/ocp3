@@ -95,10 +95,6 @@ class Maze:
         else:
             return line
 
-    def maze_print(self):
-        """ Return a string of the maze state """
-        return self.string.replace('\n', '')
-
     def set_symbol(self, symbol, pos):
         """
         Set an symbol on the maze

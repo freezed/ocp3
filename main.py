@@ -16,29 +16,24 @@ from pygame.locals import (
 )
 from maze import Maze
 from player import Player
-from conf import (
-    BACKGRND_FILE, CAPTION, MAZE_FILE, HEAD_SIZE_H, maze_draw,
-    MSG_END, MSG_QUIT, set_header, WIN_DIM
-)
+from gui import GraphUI
+from conf import MAZE_FILE, MSG_END, MSG_QUIT
 
 GAME_KEYS = [K_UP, K_DOWN, K_RIGHT, K_LEFT]
 last_message = False  # Do not execute last message loop
 
-# initialize maze and player
+# initialize maze with file
 game_maze = Maze(MAZE_FILE)
-macgyver = Player(game_maze)
 
+# Running graphic user interface & initialize player
 if game_maze.status:
-    pygame.init()
-    pygame.time.Clock().tick(25)
-    pygame.display.set_caption(CAPTION)
-    WINDOW = pygame.display.set_mode(WIN_DIM)
-    WINDOW.blit(pygame.image.load(BACKGRND_FILE).convert(), (0, HEAD_SIZE_H))
+    macgyver = Player(game_maze)
+    gui = GraphUI()
 
 # Game loop
 while game_maze.status:
-    set_header(WINDOW, macgyver.status_message)
-    maze_draw(WINDOW, game_maze.maze_print())
+    gui.set_header(macgyver.status_message)
+    gui.draw(game_maze)
     for event in pygame.event.get():
         if event.type == QUIT:
             game_maze.status = False
@@ -56,7 +51,7 @@ while game_maze.status:
 # Allows reading the last_message (won, lost or quit)
 while last_message:
     macgyver.status_message['title'] = MSG_END
-    set_header(WINDOW, macgyver.status_message)
+    gui.set_header(macgyver.status_message)
     pygame.display.flip()
     for event in pygame.event.get():
         if event.type == KEYDOWN:
