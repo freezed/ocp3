@@ -23,8 +23,8 @@ class Player:
         self.position = maze.string.find(
             elmt_val('symbol', 'name', 'player', 0)
         )
-        # Element under player, default 'void'
-        self.ground = elmt_val('symbol', 'name', 'void', 0)
+        # Element under player, default 'floor'
+        self.ground = elmt_val('symbol', 'name', 'floor', 0)
 
         self.stock = []
         self.stock_num = 0
@@ -77,15 +77,15 @@ class Player:
         if next_position in self.maze.RANGE:
             next_symbol = self.maze.string[next_position]
 
-            # is a 'void' element
-            if next_symbol == elmt_val('symbol', 'name', 'void', 0):
+            # is a 'floor' element
+            if next_symbol == elmt_val('symbol', 'name', 'floor', 0):
                 self.position = next_position
                 self.status_message['status'] = MSG_OK
 
             # is a 'item' element
             elif next_symbol in elmt_val('symbol', 'item', True):
                 self.position = next_position
-                self.ground = elmt_val('symbol', 'name', 'void', 0)
+                self.ground = elmt_val('symbol', 'name', 'floor', 0)
                 self.stock.append(
                     elmt_val('name', 'symbol', next_symbol, 0)
                 )

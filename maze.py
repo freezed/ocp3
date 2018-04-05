@@ -51,7 +51,7 @@ class Maze:
                 for symbol_to_place in elmt_val('symbol', 'item', True):
                     position = random.choice(
                         [idx for (idx, value) in enumerate(self.string)
-                         if value == elmt_val('symbol', 'name', 'void', 0)]
+                         if value == elmt_val('symbol', 'name', 'floor', 0)]
                     )
 
                     self.set_symbol(symbol_to_place, position)
@@ -91,7 +91,7 @@ class Maze:
         if differance < 0:
             return line[:MAZE_SIZE]
         elif differance > 0:
-            return line + (differance * elmt_val('symbol', 'name', 'void', 0))
+            return line + (differance * elmt_val('symbol', 'name', 'floor', 0))
         else:
             return line
 
@@ -99,7 +99,7 @@ class Maze:
         """
         Set an symbol on the maze
 
-        Used for 'player' and 'void' after collecting items
+        Used for 'player' and 'floor' after collecting items
 
         :param str symbol: the symbol to set
         :param str pos: index in the string

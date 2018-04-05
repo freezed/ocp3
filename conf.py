@@ -17,7 +17,7 @@ ELEMENTS = (
      'tile': 'img/ether.png'},
     {'symbol': 'E', 'name': 'exit', 'cross': False, 'item': False,
      'tile': 'img/guardian.png'},
-    {'symbol': ' ', 'name': 'void', 'cross': True, 'item': False,
+    {'symbol': ' ', 'name': 'floor', 'cross': True, 'item': False,
      'tile': 'img/floor1.png'},
     {'symbol': '.', 'name': 'wall', 'cross': False, 'item': False,
      'tile': 'img/wall.png'},
