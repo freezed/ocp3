@@ -29,11 +29,12 @@ game_maze = Maze(MAZE_FILE)
 if game_maze.status:
     macgyver = Player(game_maze)
     gui = GraphUI()
+    # TODO include set_header() in draw()
+    gui.set_header(macgyver.status_message)
+    gui.draw(game_maze)
 
 # game loop
 while game_maze.status:
-    gui.set_header(macgyver.status_message)
-    gui.draw(game_maze)
     for event in pygame.event.get():
         if event.type == QUIT:
             game_maze.status = False
@@ -43,10 +44,13 @@ while game_maze.status:
             last_message = True  # executes last_message loop
             if event.key in GAME_KEYS:
                 macgyver.key_event(event.key)
+                gui.set_header(macgyver.status_message)
+                gui.update(macgyver)
 
             else:
                 macgyver.status_message['status'] = MSG_QUIT
                 game_maze.status = False
+
 
 # displays the last_message (won, lost or quit)
 while last_message:

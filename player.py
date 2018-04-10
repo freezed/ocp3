@@ -24,9 +24,11 @@ class Player:
         :param obj maze: Maze object
         """
         self.maze = maze
-        self.position = maze.string.find(
+        self.current_position = maze.string.find(
             elmt_val('symbol', 'name', 'player', 0)
         )
+        self.old_position = 0
+
         # Element under player, default 'floor'
         self.ground = elmt_val('symbol', 'name', 'floor', 0)
 
@@ -49,16 +51,16 @@ class Player:
         :param int pressed_key: direction (pygame const)
         """
         if pressed_key == K_UP:
-            self.move_to(self.position - self.maze.COL_NB)
+            self.move_to(self.current_position - self.maze.COL_NB)
 
         elif pressed_key == K_DOWN:
-            self.move_to(self.position + self.maze.COL_NB)
+            self.move_to(self.current_position + self.maze.COL_NB)
 
         elif pressed_key == K_RIGHT:
-            self.move_to(self.position + 1)
+            self.move_to(self.current_position + 1)
 
         elif pressed_key == K_LEFT:
-            self.move_to(self.position - 1)
+            self.move_to(self.current_position - 1)
 
         # ++Add other treatment for key events here (help, menu, etc.)++
 
@@ -80,14 +82,16 @@ class Player:
         if next_position in self.maze.RANGE:
             next_symbol = self.maze.string[next_position]
 
+            self.old_position = self.current_position
+
             # 'floor' element
             if next_symbol == elmt_val('symbol', 'name', 'floor', 0):
-                self.position = next_position
+                self.current_position = next_position
                 self.status_message['status'] = MSG_OK
 
             # 'item' element
             elif next_symbol in elmt_val('symbol', 'item', True):
-                self.position = next_position
+                self.current_position = next_position
                 self.stock.append(
                     elmt_val('name', 'symbol', next_symbol, 0)
                 )
@@ -121,17 +125,10 @@ class Player:
             # for all other element (wall or nline)
             else:
                 self.status_message['status'] = MSG_WALL
+                self.old_position = False
+
 
         # out the string range
         else:
             self.status_message['status'] = MSG_WALL
-
-        # Replaces player symbol on the maze by 'ground' value
-        self.maze.string = self.maze.string.replace(
-            elmt_val('symbol', 'name', 'player', 0), self.ground
-        )
-
-        # Sets the player's new position
-        self.maze.set_symbol(
-            elmt_val('symbol', 'name', 'player', 0), self.position
-        )
+            self.old_position = False

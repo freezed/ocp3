@@ -76,3 +76,32 @@ class GraphUI:
         self.SURFACE.blit(h_title, (0, 0))
         self.SURFACE.blit(h_status, (0, CELL_SIZE))
         self.SURFACE.blit(h_items, h_items_pos)
+
+    def update(self, player):
+        """
+        Updates GUI after a move
+
+        :param obj player: a Player object
+        """
+        changed_tiles = [
+            (elmt_val('tile', 'symbol', player.ground, 0), player.old_position),
+            (elmt_val('tile', 'name', 'player', 0), player.current_position),
+        ]
+
+        # [print('tile[0]:{} tile[1]:{}'.format(tile[0], tile[1])) for num, tile in enumerate(changed_tiles) if tile[0] is not False]
+        [self.blit(tile[0], self.coord_from_index(tile[1])) for num, tile in enumerate(changed_tiles) if False not in tile]
+
+        # Refresh
+        pygame.display.flip()
+
+    def coord_from_index(self, idx):
+        """
+        Gets 2 dimensions coordinates
+
+        Converts a string index (the position in the maze.string: beware of EOL) to 2 dimensions coordinates (necessary for positionning objects in pygame)
+        :param int index: string index
+        """
+
+        x = (idx % (MAZE_SIZE + 1)) * CELL_SIZE
+        y = (idx // (MAZE_SIZE + 1)) * CELL_SIZE + HEAD_SIZE_H
+        return (x, y)
