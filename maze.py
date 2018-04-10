@@ -97,7 +97,7 @@ class Maze:
 
     def set_symbol(self, symbol, pos):
         """
-        Set an symbol on the maze
+        Set a symbol on the maze
 
         Used for 'player' and 'floor' after collecting items
 

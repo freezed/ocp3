@@ -12,14 +12,16 @@ from conf import (
 )
 
 
-
 class GraphUI:
-    """
-    GraphUI
-    """
+    """ Manages graphic display with pygame """
 
     def __init__(self):
-        """ Constructor """
+        """
+        Starts pygames magic:
+        - `surface`  object
+        - `font` object
+        - the display clock
+        """
         pygame.init()
         pygame.time.Clock().tick(25)
         pygame.display.set_caption(CAPTION)
@@ -60,7 +62,7 @@ class GraphUI:
         """
         Set the header message on the window
 
-        :param obj surface: surface surfaceect
+        :param obj surface: surface object
         :param list/str messages: list of messages per place
         """
         pygame.draw.rect(self.SURFACE, BLACK, (0, 0, WIN_SIZE_W, HEAD_SIZE_H))

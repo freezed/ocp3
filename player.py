@@ -18,7 +18,11 @@ class Player:
     """
 
     def __init__(self, maze):
-        """ Constructor """
+        """
+        Creates a player in the given maze
+
+        :param obj maze: Maze object
+        """
         self.maze = maze
         self.position = maze.string.find(
             elmt_val('symbol', 'name', 'player', 0)
@@ -26,9 +30,11 @@ class Player:
         # Element under player, default 'floor'
         self.ground = elmt_val('symbol', 'name', 'floor', 0)
 
+        # Colleted items
         self.stock = []
         self.stock_num = 0
 
+        # Contextual messages to display on each turn
         self.status_message = {}
         self.status_message['title'] = HEAD_MESSAGES['title']
         self.status_message['status'] = HEAD_MESSAGES['status']
@@ -36,30 +42,27 @@ class Player:
             self.stock_num, maze.MAX_ITEMS
         )
 
-    def move_to(self, pressed_key):
+    def key_event(self, pressed_key):
         """
-        Move the player on the maze
+        Sets value of the new position and passes it to `move_to()`
 
-        :param str pressed_key: direction (pygame const)
+        :param int pressed_key: direction (pygame const)
         """
-        # Replace player symbol on the maze by 'ground'
-        self.maze.string = self.maze.string.replace(
-            elmt_val('symbol', 'name', 'player', 0), self.ground
-        )
-
         if pressed_key == K_UP:
-            self.next_pos(self.position - self.maze.COL_NB)
+            self.move_to(self.position - self.maze.COL_NB)
 
         elif pressed_key == K_DOWN:
-            self.next_pos(self.position + self.maze.COL_NB)
+            self.move_to(self.position + self.maze.COL_NB)
 
         elif pressed_key == K_RIGHT:
-            self.next_pos(self.position + 1)
+            self.move_to(self.position + 1)
 
         elif pressed_key == K_LEFT:
-            self.next_pos(self.position - 1)
+            self.move_to(self.position - 1)
 
-    def next_pos(self, next_position):
+        # ++Add other treatment for key events here (help, menu, etc.)++
+
+    def move_to(self, next_position):
         """
         Next position treatment
 
@@ -73,19 +76,18 @@ class Player:
 
         :param int next_position: index in self.maze.string
         """
-        # is in the string range
+        # in the string range
         if next_position in self.maze.RANGE:
             next_symbol = self.maze.string[next_position]
 
-            # is a 'floor' element
+            # 'floor' element
             if next_symbol == elmt_val('symbol', 'name', 'floor', 0):
                 self.position = next_position
                 self.status_message['status'] = MSG_OK
 
-            # is a 'item' element
+            # 'item' element
             elif next_symbol in elmt_val('symbol', 'item', True):
                 self.position = next_position
-                self.ground = elmt_val('symbol', 'name', 'floor', 0)
                 self.stock.append(
                     elmt_val('name', 'symbol', next_symbol, 0)
                 )
@@ -98,8 +100,8 @@ class Player:
                         self.stock_num, self.maze.MAX_ITEMS
                     )
 
-            # is an 'exit' element (aka the guard)
-            elif next_symbol == elmt_val('symbol', 'name', 'exit', 0):
+            # 'guard' element
+            elif next_symbol == elmt_val('symbol', 'name', 'guard', 0):
                 self.maze.status = False
 
                 # all 'item' are collected : player wins
@@ -116,12 +118,18 @@ class Player:
                         missed_item_flist
                     )
 
-            # is all other element (wall or nline)
+            # for all other element (wall or nline)
             else:
                 self.status_message['status'] = MSG_WALL
 
+        # out the string range
         else:
             self.status_message['status'] = MSG_WALL
+
+        # Replaces player symbol on the maze by 'ground' value
+        self.maze.string = self.maze.string.replace(
+            elmt_val('symbol', 'name', 'player', 0), self.ground
+        )
 
         # Sets the player's new position
         self.maze.set_symbol(

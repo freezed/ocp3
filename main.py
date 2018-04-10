@@ -20,17 +20,17 @@ from gui import GraphUI
 from conf import MAZE_FILE, MSG_END, MSG_QUIT
 
 GAME_KEYS = [K_UP, K_DOWN, K_RIGHT, K_LEFT]
-last_message = False  # Do not execute last message loop
+last_message = False  # do not execute last message loop
 
 # initialize maze with file
 game_maze = Maze(MAZE_FILE)
 
-# Running graphic user interface & initialize player
+# running graphic user interface & initialize player
 if game_maze.status:
     macgyver = Player(game_maze)
     gui = GraphUI()
 
-# Game loop
+# game loop
 while game_maze.status:
     gui.set_header(macgyver.status_message)
     gui.draw(game_maze)
@@ -40,15 +40,15 @@ while game_maze.status:
             last_message = False
 
         if event.type == KEYDOWN:
-            last_message = True  # Execute last_message loop
+            last_message = True  # executes last_message loop
             if event.key in GAME_KEYS:
-                macgyver.move_to(event.key)
+                macgyver.key_event(event.key)
 
             else:
                 macgyver.status_message['status'] = MSG_QUIT
                 game_maze.status = False
 
-# Allows reading the last_message (won, lost or quit)
+# displays the last_message (won, lost or quit)
 while last_message:
     macgyver.status_message['title'] = MSG_END
     gui.set_header(macgyver.status_message)

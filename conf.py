@@ -15,7 +15,7 @@ ELEMENTS = (
      'tile': 'img/rod.png'},
     {'symbol': 'e', 'name': 'ether', 'cross': True, 'item': True,
      'tile': 'img/ether.png'},
-    {'symbol': 'E', 'name': 'exit', 'cross': False, 'item': False,
+    {'symbol': 'E', 'name': 'guard', 'cross': False, 'item': False,
      'tile': 'img/guardian.png'},
     {'symbol': ' ', 'name': 'floor', 'cross': True, 'item': False,
      'tile': 'img/floor1.png'},
@@ -49,7 +49,7 @@ MSG_LOSER = "You lose! You were missing: {}."
 MSG_OK = "…"
 MSG_QUIT = "You decide to quit the game"
 MSG_WALL = "That's a wall!"
-MSG_WINNER = "Cogratulations! You asleep the guard."
+MSG_WINNER = "Congratulations! You asleep the guard."
 
 # Files
 MAZE_FILE = '01.maze'
