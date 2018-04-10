@@ -1,6 +1,6 @@
 -[_Open Classrooms courses_](https://openclassrooms.com/projects/aidez-macgyver-a-sechapper)-
 
-# [PyDev] Project 3
+# [PyDev] Projet 3
 
 #### Help MacGyver to escape!
 
@@ -36,11 +36,13 @@ Feel free to contribute, I do not use other OS
 
 * `main.py`, main script the one to run
 * `conf.py`, place for variables, constants and fuctions
-* `maze.py`, maze class
-* `README.md`, you're reading it!
+* `maze.py`, Maze class
+* `player.py`, Player class
+* `gui.py`, GraphicUI class
+* `01.maze`, maze file
+* `img/`, directory for image files
 * `requirement.txt`, dependences for feeding pip
-* `01.maze`, file of the maze
-* `img/`, place for images (tiles) files
+* `README.md`, you're reading it!
 
 ### Features
 
