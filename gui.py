@@ -39,11 +39,12 @@ class GraphUI:
             pygame.image.load(img_file).convert_alpha(), position
         )
 
-    def draw(self, maze):
+    def draw(self, maze, messages):
         """
         Take a maze string and generate a graphic maze
 
         :param obj maze: a Maze object
+        :param list/str messages: list of messages for header
         """
         for cell, element in enumerate(maze.string.replace('\n', '')):
             img = elmt_val('tile', 'symbol', element, 0)
@@ -55,6 +56,8 @@ class GraphUI:
             else:
                 self.blit(img, (x, y))
 
+        self.set_header(messages)
+
         # Refresh
         pygame.display.flip()
 
@@ -63,7 +66,7 @@ class GraphUI:
         Set the header message on the window
 
         :param obj surface: surface object
-        :param list/str messages: list of messages per place
+        :param list/str messages: list of messages per emplacement
         """
         pygame.draw.rect(self.SURFACE, BLACK, (0, 0, WIN_SIZE_W, HEAD_SIZE_H))
 
@@ -84,21 +87,31 @@ class GraphUI:
         :param obj player: a Player object
         """
         changed_tiles = [
-            (elmt_val('tile', 'symbol', player.ground, 0), player.old_position),
-            (elmt_val('tile', 'name', 'player', 0), player.current_position),
+            (
+                elmt_val('tile', 'symbol', player.ground, 0),
+                player.old_position
+            ),
+            (
+                elmt_val('tile', 'name', 'player', 0),
+                player.current_position
+            ),
         ]
 
-        # [print('tile[0]:{} tile[1]:{}'.format(tile[0], tile[1])) for num, tile in enumerate(changed_tiles) if tile[0] is not False]
-        [self.blit(tile[0], self.coord_from_index(tile[1])) for num, tile in enumerate(changed_tiles) if False not in tile]
+        [self.blit(tile[0], self.coord_from_index(tile[1]))
+            for num, tile in enumerate(changed_tiles) if None not in tile]
 
         # Refresh
         pygame.display.flip()
 
-    def coord_from_index(self, idx):
+    @staticmethod
+    def coord_from_index(idx):
         """
         Gets 2 dimensions coordinates
 
-        Converts a string index (the position in the maze.string: beware of EOL) to 2 dimensions coordinates (necessary for positionning objects in pygame)
+        Converts a string index (the position in the maze.string: beware
+        of EOL) to 2 dimensions coordinates (necessary for positionning
+        objects in pygame)
+
         :param int index: string index
         """
 

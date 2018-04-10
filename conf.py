@@ -6,7 +6,6 @@ Licence: `GNU GPL v3` GNU GPL v3: http://www.gnu.org/licenses/
 This file is part of [_ocp3_ project](https://github.com/freezed/ocp3)
 """
 from math import floor
-import pygame
 
 ELEMENTS = (
     {'symbol': 'n', 'name': 'needle', 'cross': True, 'item': True,
@@ -24,7 +23,7 @@ ELEMENTS = (
     {'symbol': 'X', 'name': 'player', 'cross': False, 'item': False,
      'tile': 'img/macgyver.png'},
     {'symbol': '\n', 'name': 'nlin', 'cross': False, 'item': False,
-     'tile': False},
+     'tile': None},
 )
 
 CELL_SIZE = 30   # Size of the tiles, in pixels

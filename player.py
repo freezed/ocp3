@@ -27,7 +27,7 @@ class Player:
         self.current_position = maze.string.find(
             elmt_val('symbol', 'name', 'player', 0)
         )
-        self.old_position = 0
+        self.old_position = None
 
         # Element under player, default 'floor'
         self.ground = elmt_val('symbol', 'name', 'floor', 0)
@@ -125,10 +125,20 @@ class Player:
             # for all other element (wall or nline)
             else:
                 self.status_message['status'] = MSG_WALL
-                self.old_position = False
+                self.old_position = None
 
 
         # out the string range
         else:
             self.status_message['status'] = MSG_WALL
-            self.old_position = False
+            self.old_position = None
+
+        # Replaces player symbol in maze.string by 'ground' value
+        self.maze.string = self.maze.string.replace(
+            elmt_val('symbol', 'name', 'player', 0), self.ground
+        )
+
+        # Sets the player's new position in maze.string
+        self.maze.set_symbol(
+            elmt_val('symbol', 'name', 'player', 0), self.current_position
+        )
