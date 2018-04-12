@@ -24,10 +24,11 @@ class Maze:
         The Maze object has given attributes:
 
         :var bool status: False = End of game (file error, end of game or quit)
-        :var str ground: Element under player
-        :var int position: Player index in string
         :var int COL_NB: column number of the maze
         :var int RANGE: string range
+        :var int MAX_ITEMS: number of items
+        :var str string: contain maze without EOL in astring
+
 
         :param filename: maze filename
         """
@@ -60,7 +61,7 @@ class Maze:
                     1 for _ in elmt_val('name', 'item', True)
                 )
                 self.COL_NB = MAZE_SIZE + 1  # List starts to zero
-                self.RANGE = range(self.COL_NB * MAZE_SIZE - 1)  # last EOL
+                self.RANGE = range(self.COL_NB * MAZE_SIZE - 1)  # remove last EOL
                 self.status = True
 
             else:
